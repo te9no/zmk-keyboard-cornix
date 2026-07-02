@@ -19,6 +19,8 @@ The project includes several specialized shields that provide additional functio
 - **`cornix_dongle_adapter`**: Provides common functionality for the matrix and Bluetooth functionality for dongle configurations. This shield is required when using the Cornix with a custom dongle.
 - **`cornix_dongle_eyelash`**: An example shield for setting up display device for the dongle board. This is used when the board doesn't already have `zephyr,display` in the device tree.
 - **`cornix_indicator`**: A shield that enables RGB LED indicators for battery status and connection status. Note that using this shield consumes more power.
+- **`cornix_lpps_central`**: Xiao BLE/nRF52840 shield for an independent LPPS/ADS1220 four-terminal sensor module. It acts as the split central and reports relative X/Y pointer input.
+- **`cornix_tps43_central`**: Xiao BLE/nRF52840 shield for an independent Azoteq TPS43 trackpad module. It acts as the split central; Cornix halves should be built as peripherals (`cornix_ph_left` and `cornix_right`).
 
 ---
 
@@ -312,6 +314,72 @@ projects:
     remote: urob
     revision: main
 ```
+
+## LPPS ADS1220 Central
+
+The `cornix_lpps_central` shield turns an independent Xiao BLE/nRF52840 + ADS1220 LPPS module into the Cornix split central. In this mode the keyboard halves are peripherals, so build and flash:
+
+```yaml
+include:
+  - board: xiao_ble
+    shield: cornix_lpps_central
+    snippet: studio-rpc-usb-uart
+    artifact-name: cornix_lpps_central
+
+  - board: cornix_ph_left
+    artifact-name: cornix_left_for_lpps_nosd
+
+  - board: cornix_right
+    artifact-name: cornix_right_for_lpps_nosd
+```
+
+Default LPPS/ADS1220 wiring in `cornix_lpps_central.overlay`:
+
+| ADS1220 / LPPS | Xiao BLE |
+| --- | --- |
+| VCC | 3V3 from the battery-powered regulator |
+| GND | GND |
+| SCLK | D8 / Xiao SPI SCK |
+| MISO | D9 / Xiao SPI MISO |
+| MOSI | D10 / Xiao SPI MOSI |
+| CS | D7 |
+| DRDY | D6 |
+| Battery sense | D0 / AIN0 |
+
+The four-terminal sensor is configured as two high-resolution relative axes through the ADS1220 module's `analog-axis-hires` driver. The default channel setup follows the module's four-wire trackpoint example: X uses `AIN0` against `AIN2`, Y uses `AIN1` against `AIN2`, and IDAC excitation is routed to `REFP0` with `REFN0` as the external reference low side. Update `zephyr,input-positive`, `zephyr,input-negative`, and `zephyr,current-source-pin` if the LPPS PCB maps the four sensor terminals differently.
+
+## TPS43 Trackpad Central
+
+The `cornix_tps43_central` shield turns an independent Xiao BLE/nRF52840 + Azoteq TPS43 module into the Cornix split central. In this mode the keyboard halves are peripherals, so build and flash:
+
+```yaml
+include:
+  - board: xiao_ble
+    shield: cornix_tps43_central
+    snippet: studio-rpc-usb-uart
+    artifact-name: cornix_tps43_central
+
+  - board: cornix_ph_left
+    artifact-name: cornix_left_for_tps43_nosd
+
+  - board: cornix_right
+    artifact-name: cornix_right_for_tps43_nosd
+```
+
+Default TPS43 wiring in `cornix_tps43_central.overlay`:
+
+| TPS43 | Xiao BLE |
+| --- | --- |
+| VDDHI | 3V3 from the battery-powered regulator |
+| GND | GND |
+| SDA | D4 / Xiao I2C SDA |
+| SCL | D5 / Xiao I2C SCL |
+| RDY | D3 |
+| NRST | D2 |
+| Battery sense | D0 / AIN0 |
+
+If the trackpad PCB uses different RDY or NRST pins, update only `rdy-gpios` and `reset-gpios` in `boards/shields/cornix_tps43_central/cornix_tps43_central.overlay`.
+Battery sense is configured as a 1:1 ADC input on D0/AIN0. If the hardware uses a resistor divider, update `output-ohms` and `full-ohms` in the same overlay. Standard ZMK reports the voltage through its built-in battery driver, but its percentage conversion is Li-ion oriented; dry-cell-specific percentage mapping would need a custom battery driver/module.
 
 ## Build This Project Locally (Without west.yaml Dependency)
 

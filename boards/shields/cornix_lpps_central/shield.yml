@@ -1,0 +1,10 @@
+file_format: "1"
+id: cornix_lpps_central
+name: Cornix LPPS ADS1220 Central
+type: shield
+url: https://github.com/hitsmaxft/zmk-keyboard-cornix
+requires:
+  - xiao_ble
+features:
+  - pointer
+  - studio

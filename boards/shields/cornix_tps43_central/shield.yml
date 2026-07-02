@@ -1,0 +1,11 @@
+file_format: "1"
+id: cornix_tps43_central
+name: Cornix TPS43 Central
+type: shield
+url: https://github.com/hitsmaxft/zmk-keyboard-cornix
+requires:
+  - xiao_ble
+features:
+  - pointer
+  - studio
+

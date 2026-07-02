@@ -1,0 +1,69 @@
+# Copyright (c) 2026
+# SPDX-License-Identifier: MIT
+
+if SHIELD_CORNIX_LPPS_CENTRAL
+
+config ZMK_KEYBOARD_NAME
+    default "Cornix LPPS"
+
+config ZMK_SPLIT
+    default y
+
+config ZMK_SPLIT_ROLE_CENTRAL
+    default y
+
+config ZMK_SPLIT_BLE_ROLE_CENTRAL
+    default y
+
+config ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING
+    default y
+
+config ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_PROXY
+    default y
+
+config ZMK_BLE
+    default y
+
+config ZMK_USB
+    default y
+
+config INPUT
+    default y
+
+config ZMK_POINTING
+    default y
+
+config MULTITHREADING
+    default y
+
+config ADC
+    default y
+
+config ADC_NRFX_SAADC
+    default y
+
+config SPI
+    default y
+
+config GPIO
+    default y
+
+config ADC_ADS1220
+    default y
+
+config GPIO_ADS1220
+    default y
+
+config INPUT_ANALOG_AXIS_HIRES
+    default y
+
+config INPUT_ANALOG_AXIS_HIRES_SETTINGS
+    default y
+
+config PM_DEVICE
+    default y
+
+config PM_DEVICE_RUNTIME
+    default y
+
+endif # SHIELD_CORNIX_LPPS_CENTRAL

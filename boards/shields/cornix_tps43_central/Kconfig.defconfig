@@ -1,0 +1,54 @@
+# Copyright (c) 2026
+# SPDX-License-Identifier: MIT
+
+if SHIELD_CORNIX_TPS43_CENTRAL
+
+config ZMK_KEYBOARD_NAME
+    default "Cornix TPS43"
+
+config ZMK_SPLIT
+    default y
+
+config ZMK_SPLIT_ROLE_CENTRAL
+    default y
+
+config ZMK_SPLIT_BLE_ROLE_CENTRAL
+    default y
+
+config ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING
+    default y
+
+config ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_PROXY
+    default y
+
+config ZMK_BLE
+    default y
+
+config ZMK_USB
+    default y
+
+config INPUT
+    default y
+
+config ZMK_POINTING
+    default y
+
+config ADC
+    default y
+
+config ADC_NRFX_SAADC
+    default y
+
+config I2C
+    default y
+
+config GPIO
+    default y
+
+config SENSOR
+    default y
+
+config INPUT_AZOTEQ_IQS5XX
+    default y
+
+endif # SHIELD_CORNIX_TPS43_CENTRAL

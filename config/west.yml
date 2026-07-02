@@ -10,6 +10,10 @@ manifest:
       url-base: https://github.com/urob
     - name: janpfischer
       url-base: https://github.com/janpfischer
+    - name: AYM1607
+      url-base: https://github.com/AYM1607
+    - name: badjeff
+      url-base: https://github.com/badjeff
   projects:
     - name: zmk
       remote: zmkfirmware
@@ -27,6 +31,14 @@ manifest:
     #  clone-depth: 1
     - name: zmk-dongle-display
       remote: englmaxi
+      revision: main
+      clone-depth: 1
+    - name: zmk-driver-azoteq-iqs5xx
+      remote: AYM1607
+      revision: main
+      clone-depth: 1
+    - name: ads1220-zephyr-module
+      remote: badjeff
       revision: main
       clone-depth: 1
     #- name: zmk-dongle-screen

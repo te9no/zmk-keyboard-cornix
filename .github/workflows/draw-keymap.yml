@@ -1,0 +1,25 @@
+﻿name: Draw ZMK keymaps
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/*.keymap"
+      - "config/*.json"
+      - "boards/**/*.dtsi"
+      - "boards/**/*.overlay"
+      - "snippets/**/*.overlay"
+      - "keymap-drawer/config.yaml"
+      - ".github/workflows/draw-keymap.yml"
+
+jobs:
+  draw-keymap-svg:
+    uses: te9no/zmk-workspace/.github/workflows/draw-keymap-svg.yml@main
+    permissions:
+      contents: write
+    with:
+      commit_message: "[Draw keymap-svg] ${{ github.event.head_commit.message || 'manual run' }}"
+      amend_commit: false
+      keymap_patterns: "config/*.keymap"
+      output_folder: "keymap-svg"
+      destination: "both"
+      artifact_name: "keymap-svg"

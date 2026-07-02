@@ -1,0 +1,50 @@
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input-event-codes.h>
+#include "../../jzf/cornix/cornix_dongle_common.dtsi"
+
+/ {
+    chosen {
+        zmk,battery = &vbatt;
+    };
+
+    vbatt: vbatt {
+        compatible = "zmk,battery-voltage-divider";
+        io-channels = <&adc 0>;
+        output-ohms = <1000000>;
+        full-ohms = <1000000>;
+    };
+
+    tps43_input: tps43_input {
+        compatible = "zmk,input-listener";
+        device = <&tps43>;
+    };
+};
+
+&adc {
+    status = "okay";
+};
+
+&xiao_i2c {
+    status = "okay";
+
+    tps43: iqs5xx@74 {
+        compatible = "azoteq,iqs5xx";
+        reg = <0x74>;
+        status = "okay";
+
+        /* TPS43 FPC: RDY -> D3, NRST -> D2, SDA/SCL -> XIAO I2C D4/D5. */
+        rdy-gpios = <&xiao_d 3 GPIO_ACTIVE_HIGH>;
+        reset-gpios = <&xiao_d 2 GPIO_ACTIVE_LOW>;
+
+        one-finger-tap;
+        two-finger-tap;
+        press-and-hold;
+        press-and-hold-time = <250>;
+        scroll;
+        natural-scroll-y;
+        natural-scroll-x;
+
+        bottom-beta = <5>;
+        stationary-threshold = <5>;
+    };
+};
