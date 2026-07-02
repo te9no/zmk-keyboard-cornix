@@ -1,0 +1,13 @@
+{
+  "repository": "te9no/zmk-keyboard-cornix",
+  "branch": "main",
+  "target": "all",
+  "status": "failing",
+  "raw_status": "failure",
+  "color": "#d73a49",
+  "sha": "700b3622aebb8eed7a053fb75f39836badcd589f",
+  "run_id": "28600153357",
+  "run_number": "1",
+  "run_url": "https://github.com/te9no/zmk-keyboard-cornix/actions/runs/28600153357",
+  "generated_at": "2026-07-02T15:12:42Z"
+}
