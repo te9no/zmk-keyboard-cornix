@@ -5,9 +5,9 @@
   "status": "failing",
   "raw_status": "failure",
   "color": "#d73a49",
-  "sha": "80878fd37d036ab068d07054afcacbfc31535da3",
-  "run_id": "28719604757",
-  "run_number": "4",
-  "run_url": "https://github.com/te9no/zmk-keyboard-cornix/actions/runs/28719604757",
-  "generated_at": "2026-07-04T21:10:27Z"
+  "sha": "81c75692b3c882fd6b0f3afe643148b4b5fa7e18",
+  "run_id": "28754952186",
+  "run_number": "5",
+  "run_url": "https://github.com/te9no/zmk-keyboard-cornix/actions/runs/28754952186",
+  "generated_at": "2026-07-05T21:14:21Z"
 }
