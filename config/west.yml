@@ -28,6 +28,10 @@ manifest:
       remote: urob
       revision: main
       clone-depth: 1
+    - name: zmk-layout-shift
+      revision: 0f2fad97b32332e1832377aa8afd1ec213829190
+      url: https://github.com/kot149/zmk-layout-shift
+      path: modules/zmk-layout-shift
     - name: zmk-rgbled-widget
       remote: hitsmaxft
       revision: 6ac6efe7e0902ccef4ef3893ab0054535e727566
@@ -41,6 +45,10 @@ manifest:
       revision: 72387b5212264d26d704dbc43c765f6485470a77
       url: https://github.com/te9no/zmk-module-runtime-input-processor
       path: modules/zmk-module-runtime-input-processor
+    - name: zmk-behavior-runtime-sensor-rotate
+      revision: 8b1125ed676c1f5e14145d217984f33d0ebdcef4
+      url: https://github.com/cormoran/zmk-behavior-runtime-sensor-rotate
+      path: modules/zmk-behavior-runtime-sensor-rotate
     - name: zmk-module-ble-management
       remote: cormoran
       revision: 57738cc4fc6ba80e82a7ac57741a0339cb186cd4

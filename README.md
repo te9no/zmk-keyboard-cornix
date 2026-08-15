@@ -34,6 +34,8 @@ Available features:
 
 - Physical-layout-aware keymap editing
 - Runtime combo and macro configuration
+- Per-layer left/right encoder configuration
+- Runtime US/JIS layout shift using the Adjust-layer toggle
 - TPS43 pointer and scroll tuning through runtime input processors
 - Bluetooth profile management and settings access
 - Device and firmware information
@@ -49,7 +51,7 @@ The DYA Studio configuration is included in `cornix_tps43_production` and `corni
 
 TPS43 ドングルを USB 接続し、[DYA Studio](https://studio.dya.cormoran.works/) から Studio 用シリアルポートを選択します。ZMK ログ用ポートとは別のポートです。
 
-DYA Studio では、キーマップ、Combo、Macro、Bluetooth 設定、TPS43 のカーソル・スクロール調整、デバイス情報、Watchdog、左右キースイッチ診断、スタック使用量を確認または変更できます。Watchdog は TPS43 Central のみを監視し、KScan 診断は左右 Peripheral の情報を Central 経由で集約します。
+DYA Studio では、キーマップ、Combo、Macro、左右エンコーダーのレイヤー別動作、Bluetooth 設定、TPS43 のカーソル・スクロール調整、デバイス情報、Watchdog、左右キースイッチ診断、スタック使用量を確認または変更できます。Adjust レイヤー左端の `Layout Shift` キーでは、US 配列と JIS 配列向けのキーコード変換を切り替えられます。Watchdog は TPS43 Central のみを監視し、KScan 診断は左右 Peripheral の情報を Central 経由で集約します。
 
 
 ![image](images/cornix_with_dongle.png)
