@@ -25,25 +25,13 @@ manifest:
       remote: urob
       revision: main
       clone-depth: 1
-    #- name: zmk-rgbled-widget
-    #  remote: hitsmaxft
-    #  revision: main
-    #  clone-depth: 1
-    - name: zmk-dongle-display
-      remote: englmaxi
+    - name: zmk-rgbled-widget
+      remote: hitsmaxft
       revision: main
       clone-depth: 1
     - name: zmk-driver-azoteq-iqs5xx
       remote: AYM1607
       revision: main
       clone-depth: 1
-    - name: ads1220-zephyr-module
-      remote: badjeff
-      revision: main
-      clone-depth: 1
-    #- name: zmk-dongle-screen
-    #  remote: janpfischer
-    #  revision: main
-    #  clone-depth: 1
   self:
     path: config

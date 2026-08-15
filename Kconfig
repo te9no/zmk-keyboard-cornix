@@ -1,0 +1,20 @@
+config ZMK_CDC_ACM_BOOTLOADER_TRIGGER
+    bool "Enter the UF2 bootloader after a 1200-baud CDC touch"
+    select USB_CDC_ACM
+
+if ZMK_CDC_ACM_BOOTLOADER_TRIGGER
+
+config ZMK_CDC_ACM_BOOTLOADER_TRIGGER_DELAY_MS
+    int "Delay before entering the bootloader"
+    default 100
+
+endif
+
+config CORNIX_BLE_LINK_MONITOR
+    bool "Log only BLE link state transitions"
+    depends on BT
+
+config CORNIX_HOST_BOND_RESET
+    bool "Clear Central host profiles while preserving split peripheral bonds"
+    depends on ZMK_BLE
+    depends on ZMK_SPLIT_ROLE_CENTRAL

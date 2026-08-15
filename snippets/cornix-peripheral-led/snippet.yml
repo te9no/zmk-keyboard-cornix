@@ -1,0 +1,4 @@
+name: cornix-peripheral-led
+append:
+  EXTRA_CONF_FILE: cornix-peripheral-led.conf
+  EXTRA_DTC_OVERLAY_FILE: cornix-peripheral-led.overlay
