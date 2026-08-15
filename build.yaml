@@ -3,29 +3,29 @@ include:
   # Production firmware
   - board: xiao_ble
     shield: cornix_tps43_central
-    snippet: zmk-usb-logging cornix-cdc-boot cornix-production-cdc
+    snippet: studio-rpc-usb-uart zmk-usb-logging cornix-cdc-boot cornix-production-cdc cornix-dya-studio-v2
     artifact-name: cornix_tps43_production
 
   - board: cornix_ph_left
-    snippet: zmk-usb-logging cornix-cdc-boot cornix-production-cdc cornix-peripheral-led
+    snippet: zmk-usb-logging cornix-cdc-boot cornix-production-cdc cornix-peripheral-led cornix-dya-peripheral
     artifact-name: cornix_left_production
 
   - board: cornix_right
-    snippet: zmk-usb-logging cornix-cdc-boot cornix-production-cdc cornix-peripheral-led
+    snippet: zmk-usb-logging cornix-cdc-boot cornix-production-cdc cornix-peripheral-led cornix-dya-peripheral
     artifact-name: cornix_right_production
 
   # Pairing recovery while retaining a normal production runtime
   - board: xiao_ble
     shield: cornix_tps43_central
-    snippet: zmk-usb-logging cornix-cdc-boot cornix-production-cdc cornix-host-bond-reset
+    snippet: studio-rpc-usb-uart zmk-usb-logging cornix-cdc-boot cornix-production-cdc cornix-host-bond-reset cornix-dya-studio-v2
     artifact-name: cornix_tps43_host_bond_reset
 
   - board: cornix_ph_left
-    snippet: zmk-usb-logging cornix-cdc-boot cornix-production-cdc cornix-peripheral-led cornix-settings-reset-once
+    snippet: zmk-usb-logging cornix-cdc-boot cornix-production-cdc cornix-peripheral-led cornix-dya-peripheral cornix-settings-reset-once
     artifact-name: cornix_left_bond_reset
 
   - board: cornix_right
-    snippet: zmk-usb-logging cornix-cdc-boot cornix-production-cdc cornix-peripheral-led cornix-settings-reset-once
+    snippet: zmk-usb-logging cornix-cdc-boot cornix-production-cdc cornix-peripheral-led cornix-dya-peripheral cornix-settings-reset-once
     artifact-name: cornix_right_bond_reset
 
   # Full settings reset images
