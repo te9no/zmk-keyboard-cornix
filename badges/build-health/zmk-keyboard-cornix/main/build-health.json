@@ -2,12 +2,12 @@
   "repository": "te9no/zmk-keyboard-cornix",
   "branch": "main",
   "target": "all",
-  "status": "failing",
-  "raw_status": "failure",
-  "color": "#d73a49",
-  "sha": "3b40dea2271a1e872adc9285e68a1c98b78b0f44",
-  "run_id": "31935203842",
-  "run_number": "47",
-  "run_url": "https://github.com/te9no/zmk-keyboard-cornix/actions/runs/31935203842",
-  "generated_at": "2026-08-16T08:04:37Z"
+  "status": "passing",
+  "raw_status": "success",
+  "color": "#2ea44f",
+  "sha": "5eccb37f98a948c8446c12f43319eb99335df7be",
+  "run_id": "31935853168",
+  "run_number": "48",
+  "run_url": "https://github.com/te9no/zmk-keyboard-cornix/actions/runs/31935853168",
+  "generated_at": "2026-08-16T08:19:38Z"
 }
