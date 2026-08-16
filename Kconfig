@@ -18,3 +18,17 @@ config CORNIX_HOST_BOND_RESET
     bool "Clear Central host profiles while preserving split peripheral bonds"
     depends on ZMK_BLE
     depends on ZMK_SPLIT_ROLE_CENTRAL
+
+config CORNIX_CENTRAL_RGB_LED
+    bool "Blink the active layer on the Central XIAO RGB LED"
+    depends on GPIO
+    depends on ZMK_SPLIT_ROLE_CENTRAL
+
+if CORNIX_CENTRAL_RGB_LED
+
+config CORNIX_CENTRAL_RGB_LED_DURATION_MS
+    int "Layer indication duration in milliseconds"
+    range 20 2000
+    default 120
+
+endif

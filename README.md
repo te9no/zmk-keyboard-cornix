@@ -47,11 +47,15 @@ The three-device topology has one TPS43 Central and two keyboard peripherals. Wa
 
 The DYA Studio configuration is included in `cornix_tps43_production` and `cornix_tps43_host_bond_reset`. The left and right production/recovery images include only the peripheral diagnostic relay. Settings-reset images remain minimal and do not expose Studio.
 
+The TPS43 Central uses the XIAO nRF52840's built-in RGB LED as a low-power layer indicator. It flashes for 120 ms after a layer change, then turns off. The colors are blue for Base, red for Function, green for Number, yellow for Adjust, and cyan for Navigation.
+
 ### DYA Studio V2 / 日本語
 
 TPS43 ドングルを USB 接続し、[DYA Studio](https://studio.dya.cormoran.works/) から Studio 用シリアルポートを選択します。ZMK ログ用ポートとは別のポートです。
 
 DYA Studio では、キーマップ、Combo、Macro、左右エンコーダーのレイヤー別動作、Bluetooth 設定、TPS43 のカーソル・スクロール調整、デバイス情報、Watchdog、左右キースイッチ診断、スタック使用量を確認または変更できます。Adjust レイヤー左端の `Layout Shift` キーでは、US 配列と JIS 配列向けのキーコード変換を切り替えられます。Watchdog は TPS43 Central のみを監視し、KScan 診断は左右 Peripheral の情報を Central 経由で集約します。
+
+TPS43 Central の XIAO nRF52840 内蔵RGB LEDは、省電力のためレイヤー変化直後だけ120ms点灯し、その後は消灯します。Baseは青、Functionは赤、Numberは緑、Adjustは黄、Navigationはシアンです。
 
 
 ![image](images/cornix_with_dongle.png)
@@ -77,16 +81,12 @@ you have two solutions
 - [x] no-SD image, since v2.3
 - [x] support various of dongles
 - [x] upgrade to zephyr4.1 and lvgl9 , since v2.7, no dongle screen support yet
-- [ ] rgb since in future v3
+- [x] RGB status indicators for the TPS43 Central and Cornix peripherals
 
 
 ### about RGB
 
-Cornix shield has 2 RGB LEDs on each side, controled by PWM in the stock firmware.
-
-The replacement solution is adapting the RGB indicator module to light up these RGBs, to achieve the same effect as the stock firmware, which uses the RGB LEDs to indicate battery status and connection status.
-
-But it is not supported yet in this repository.  PR is welcome!
+Cornix has two RGB LEDs on each keyboard half, while the TPS43 Central uses the XIAO nRF52840's built-in three-channel RGB LED. The keyboard peripherals use `zmk-rgbled-widget`; the Central uses the lightweight `cornix-central-rgb-led` snippet for layer indication.
 
 ## Supported Hardware: Cornix Split Keyboard
 

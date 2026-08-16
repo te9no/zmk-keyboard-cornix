@@ -1,4 +1,5 @@
 #include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/i2c/i2c.h>
 #include <dt-bindings/input/input-event-codes.h>
 #include <dt-bindings/zmk/input_transform.h>
 #include <input/processors.dtsi>
@@ -55,6 +56,7 @@
 
 &i2c0 {
     status = "okay";
+    clock-frequency = <I2C_BITRATE_FAST>;
     pinctrl-0 = <&i2c0_default>;
     pinctrl-1 = <&i2c0_sleep>;
     pinctrl-names = "default", "sleep";
@@ -77,6 +79,7 @@
         natural-scroll-x;
 
         bottom-beta = <5>;
-        stationary-threshold = <5>;
+        /* Preserve low-speed motion instead of quantizing it into visible steps. */
+        stationary-threshold = <1>;
     };
 };
