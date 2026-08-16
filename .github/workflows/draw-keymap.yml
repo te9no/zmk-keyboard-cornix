@@ -19,7 +19,7 @@ jobs:
     with:
       commit_message: "[Draw keymap-svg] ${{ github.event.head_commit.message || 'manual run' }}"
       amend_commit: false
-      keymap_patterns: "config/*.keymap"
+      keymap_patterns: "config/cornix.keymap"
       output_folder: "keymap-svg"
       destination: "both"
       artifact_name: "keymap-svg"
