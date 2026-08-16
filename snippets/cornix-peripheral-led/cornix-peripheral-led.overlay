@@ -1,0 +1,21 @@
+/ {
+    chosen {
+        widget,rgb = &led_strip;
+    };
+
+    aliases {
+        status-ws2812 = &led_strip;
+    };
+};
+
+&spi3 {
+    status = "okay";
+};
+
+&led_strip {
+    status = "okay";
+};
+
+&{/EXT_POWER} {
+    status = "okay";
+};

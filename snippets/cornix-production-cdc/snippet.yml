@@ -1,0 +1,3 @@
+name: cornix-production-cdc
+append:
+  EXTRA_CONF_FILE: cornix-production-cdc.conf

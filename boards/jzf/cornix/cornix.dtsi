@@ -35,7 +35,7 @@
     pinctrl-1 = <&spi3_sleep>;
     pinctrl-names = "default", "sleep";
 
-    ws2812@0 {
+    led_strip: ws2812@0 {
         status = "disabled";
         compatible = "worldsemi,ws2812-spi";
 

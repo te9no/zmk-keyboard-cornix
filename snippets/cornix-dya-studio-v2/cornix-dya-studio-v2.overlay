@@ -1,0 +1,18 @@
+#include <dt-bindings/zmk/input_transform.h>
+#include <input/processors.dtsi>
+#include <input/processors/runtime-input-processor.dtsi>
+
+/* Keep the existing TPS43 defaults while exposing runtime tuning to DYA Studio. */
+&scroll_runtime_input_processor {
+    scale-divisor = <1>;
+};
+
+&tps43_input {
+    input-processors =
+        <&zip_xy_transform
+            (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+        <&mouse_runtime_input_processor>,
+        <&zip_scroll_transform
+            (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+        <&scroll_runtime_input_processor>;
+};

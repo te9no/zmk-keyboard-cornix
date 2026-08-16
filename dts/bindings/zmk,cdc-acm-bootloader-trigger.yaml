@@ -1,0 +1,9 @@
+description: CDC ACM 1200-baud UF2 bootloader trigger
+
+compatible: "zmk,cdc-acm-bootloader-trigger"
+
+properties:
+  cdc-port:
+    type: phandle
+    required: true
+    description: CDC ACM UART monitored for the 1200-baud open/close sequence.

@@ -14,36 +14,82 @@ manifest:
       url-base: https://github.com/AYM1607
     - name: badjeff
       url-base: https://github.com/badjeff
+    - name: te9no
+      url-base: https://github.com/te9no
+    - name: cormoran
+      url-base: https://github.com/cormoran
   projects:
     - name: zmk
-      remote: zmkfirmware
-      revision: main
-      clone-depth: 1
+      remote: te9no
+      revision: afe241df80b05c3f4e0cc95ada7584d24422a893
       import:
         file: app/west.yml
     - name: zmk-helpers
       remote: urob
       revision: main
       clone-depth: 1
-    #- name: zmk-rgbled-widget
-    #  remote: hitsmaxft
-    #  revision: main
-    #  clone-depth: 1
-    - name: zmk-dongle-display
-      remote: englmaxi
-      revision: main
-      clone-depth: 1
+    - name: zmk-layout-shift
+      revision: 0f2fad97b32332e1832377aa8afd1ec213829190
+      url: https://github.com/kot149/zmk-layout-shift
+      path: modules/zmk-layout-shift
+    - name: zmk-rgbled-widget
+      remote: hitsmaxft
+      revision: 6ac6efe7e0902ccef4ef3893ab0054535e727566
     - name: zmk-driver-azoteq-iqs5xx
       remote: AYM1607
       revision: main
       clone-depth: 1
-    - name: ads1220-zephyr-module
-      remote: badjeff
-      revision: main
-      clone-depth: 1
-    #- name: zmk-dongle-screen
-    #  remote: janpfischer
-    #  revision: main
-    #  clone-depth: 1
+
+    # DYA Studio V2 runtime configuration and diagnostics.
+    - name: zmk-module-runtime-input-processor
+      revision: 72387b5212264d26d704dbc43c765f6485470a77
+      url: https://github.com/te9no/zmk-module-runtime-input-processor
+      path: modules/zmk-module-runtime-input-processor
+    - name: zmk-behavior-runtime-sensor-rotate
+      revision: 8b1125ed676c1f5e14145d217984f33d0ebdcef4
+      url: https://github.com/cormoran/zmk-behavior-runtime-sensor-rotate
+      path: modules/zmk-behavior-runtime-sensor-rotate
+    - name: zmk-module-ble-management
+      remote: cormoran
+      revision: 57738cc4fc6ba80e82a7ac57741a0339cb186cd4
+      path: modules/zmk-module-ble-management
+    - name: zmk-module-settings-rpc
+      revision: 083a299dd8d31c275809c5a249b12486be24a7d2
+      url: https://github.com/te9no/zmk-module-settings-rpc
+      path: modules/zmk-module-settings-rpc
+    - name: zmk-feature-runtime-combo
+      remote: cormoran
+      revision: d9490e7b5d41c516221d131241009e81740efcee
+      path: modules/zmk-feature-runtime-combo
+      import:
+        name-blocklist:
+          - zmk-feature-custom-settings
+    - name: zmk-feature-runtime-macro
+      remote: cormoran
+      revision: 38530962eb7061b60efcb98e84585cfb1f0cb6de
+      path: modules/zmk-feature-runtime-macro
+      import:
+        name-blocklist:
+          - zmk-feature-custom-settings
+    - name: zmk-feature-custom-settings
+      remote: cormoran
+      revision: c6a7fef3a3be3d3ace5de9a4b0628c6418cd1f3f
+      path: zmk-feature-custom-settings
+    - name: zmk-feature-device-info
+      remote: cormoran
+      revision: 8cedd2dd9f04e19ea5a17b94914dd47a09d8db11
+      path: modules/zmk-feature-device-info
+    - name: zmk-feature-watchdog
+      remote: cormoran
+      revision: 84ad14c6c3645dc40b23f45d08ab45418655f912
+      path: modules/zmk-feature-watchdog
+    - name: zmk-feature-kscan-diagnostics
+      remote: cormoran
+      revision: 1432f7fe0cfe903cd7d3c9931ae6bd6f2e1f328e
+      path: modules/zmk-feature-kscan-diagnostics
+    - name: zmk-module-devtool
+      remote: cormoran
+      revision: 9938a2c73c06d6e65ba2c0b68c9aa044a467eafc
+      path: modules/zmk-module-devtool
   self:
     path: config
