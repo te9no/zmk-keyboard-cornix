@@ -21,10 +21,45 @@ The project includes several specialized shields that provide additional functio
 - **`cornix_indicator`**: A shield that enables RGB LED indicators for battery status and connection status. Note that using this shield consumes more power.
 - **`cornix_lpps_central`**: Xiao BLE/nRF52840 shield for an independent LPPS/ADS1220 four-terminal sensor module. It acts as the split central and reports relative X/Y pointer input.
 - **`cornix_tps43_central`**: Xiao BLE/nRF52840 shield for an independent Azoteq TPS43 trackpad module. It acts as the split central; Cornix halves should be built as peripherals (`cornix_ph_left` and `cornix_right`).
+- **`cornix_madulo_central`**: Xiao BLE/nRF52840 shield that makes a MeKaBu module the Cornix split central. Select either the PMW3610 trackball or ADS1220 LPPS trackpoint snippet; Cornix halves remain peripherals (`cornix_ph_left` and `cornix_right`).
 
 ---
 
 This community firmware has been tested with Cornix using ZMK and provides full split-role configuration, battery power management, and Bluetooth central/peripheral setup per ZMK split guidelines
+
+## Cornix Madulo Central
+
+`cornix_madulo_central` は、XIAO BLEを搭載したMaduloをCornixのCentralとして使用するためのシールドです。Cornix本体は `cornix_ph_left` と `cornix_right` をPeripheralとして使用します。J4へ接続するMeKaBuモジュールに合わせて、次のどちらか一方のCentralファームウェアを書き込んでください。
+
+| MeKaBuモジュール | `just.sh` のターゲット | 出力ファイル |
+| --- | --- | --- |
+| PMW3610トラックボール | `cornix_madulo_trackball` | `cornix_madulo_trackball.uf2` |
+| ADS1220 LPPSトラックポイント | `cornix_madulo_trackpoint` | `cornix_madulo_trackpoint.uf2` |
+
+```bash
+./just.sh init config/zmk-keyboard-cornix
+./just.sh build cornix_madulo_trackball
+# または
+./just.sh build cornix_madulo_trackpoint
+
+./just.sh build cornix_left_production
+./just.sh build cornix_right_production
+```
+
+J4の信号割り当ては次のとおりです。
+
+| J4 | 信号 | XIAO BLE GPIO | トラックボール | トラックポイント |
+| --- | --- | --- | --- | --- |
+| 1 | NCS | P1.12 | CS | CS |
+| 2 | SCLK | P1.13 | SCLK | SCLK |
+| 3 | MOTION | P1.14 | Motion IRQ | MISO |
+| 4 | SDIO | P1.15 | MOSI/MISO共用 | MOSI |
+| 5 | 3V3 | — | 3.3 V | 3.3 V |
+| 6 | GND | — | GND | GND |
+
+SW3、SW4、SW5は、それぞれP0.04、P0.05、P1.11へ接続した独立Direct GPIOキーです。キーマップ上では既存50キーの後ろの位置50–52となり、Baseレイヤーの初期割り当ては左・中央・右クリックです。
+
+SparAkashaAnantaの方式を参考に、WS2812はP0.28から駆動し、P0.03のアクティブLow信号でQL5のLED電源を制御します。LEDは1個構成で、バッテリー・接続・レイヤー状態を共有表示し、15秒で消灯します。バッテリー電圧はP0.02（ADC0）から取得します。
 
 ## DYA Studio V2
 
@@ -47,7 +82,7 @@ The three-device topology has one TPS43 Central and two keyboard peripherals. Wa
 
 The DYA Studio configuration is included in `cornix_tps43_production` and `cornix_tps43_host_bond_reset`. The left and right production/recovery images include only the peripheral diagnostic relay. Settings-reset images remain minimal and do not expose Studio.
 
-The TPS43 Central uses the XIAO nRF52840's built-in RGB LED as a low-power layer indicator. It flashes for 120 ms after a layer change, then turns off. The colors are blue for Base, red for Function, green for Number, yellow for Adjust, and cyan for Navigation.
+The TPS43 Central uses the XIAO nRF52840's built-in RGB LED as a low-power status indicator. At boot it first shows battery state (green: 80% or higher, yellow: 20–79%, red: below 20%, white: unavailable), followed by connection state (cyan: USB, blue: BLE connected, yellow: BLE advertising, red: disconnected). It then turns off. After a layer change it flashes for 120 ms: blue for Base, red for Function, green for Number, yellow for Adjust, and cyan for Navigation.
 
 ### DYA Studio V2 / 日本語
 
@@ -55,7 +90,7 @@ TPS43 ドングルを USB 接続し、[DYA Studio](https://studio.dya.cormoran.w
 
 DYA Studio では、キーマップ、Combo、Macro、左右エンコーダーのレイヤー別動作、Bluetooth 設定、TPS43 のカーソル・スクロール調整、デバイス情報、Watchdog、左右キースイッチ診断、スタック使用量を確認または変更できます。Adjust レイヤー左端の `Layout Shift` キーでは、US 配列と JIS 配列向けのキーコード変換を切り替えられます。Watchdog は TPS43 Central のみを監視し、KScan 診断は左右 Peripheral の情報を Central 経由で集約します。
 
-TPS43 Central の XIAO nRF52840 内蔵RGB LEDは、省電力のためレイヤー変化直後だけ120ms点灯し、その後は消灯します。Baseは青、Functionは赤、Numberは緑、Adjustは黄、Navigationはシアンです。
+TPS43 Central の XIAO nRF52840 内蔵RGB LEDは、起動時にバッテリー状態（80%以上は緑、20–79%は黄、20%未満は赤、取得不能は白）、続いて接続状態（USBはシアン、BLE接続は青、BLE広告中は黄、未接続は赤）を表示して消灯します。通常時は省電力のため、レイヤー変化直後だけ120ms点灯します。Baseは青、Functionは赤、Numberは緑、Adjustは黄、Navigationはシアンです。
 
 
 ![image](images/cornix_with_dongle.png)

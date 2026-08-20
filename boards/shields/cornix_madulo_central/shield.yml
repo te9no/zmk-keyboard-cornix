@@ -1,0 +1,9 @@
+file_format: "1"
+id: cornix_madulo_central
+name: Cornix Madulo Central
+type: shield
+url: https://github.com/te9no/zmk-keyboard-cornix
+requires:
+  - xiao_ble
+features:
+  - pointer
