@@ -1,0 +1,13 @@
+{
+  "repository": "te9no/zmk-keyboard-cornix",
+  "branch": "feature/cornix-madula-tp-status",
+  "target": "all",
+  "status": "passing",
+  "raw_status": "success",
+  "color": "#2ea44f",
+  "sha": "5205e54cf4d8817d93b373c82192aad8d2d71c84",
+  "run_id": "32331350365",
+  "run_number": "54",
+  "run_url": "https://github.com/te9no/zmk-keyboard-cornix/actions/runs/32331350365",
+  "generated_at": "2026-08-20T04:26:32Z"
+}
