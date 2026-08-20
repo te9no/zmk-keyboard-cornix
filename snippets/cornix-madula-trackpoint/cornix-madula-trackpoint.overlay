@@ -2,7 +2,7 @@
 #include <zephyr/dt-bindings/input/input-event-codes.h>
 
 &pinctrl {
-    madulo_tp_spi_default: madulo_tp_spi_default {
+    madula_tp_spi_default: madula_tp_spi_default {
         group1 {
             psels = <NRF_PSEL(SPIM_SCK,  1, 13)>,
                     <NRF_PSEL(SPIM_MOSI, 1, 15)>,
@@ -10,7 +10,7 @@
         };
     };
 
-    madulo_tp_spi_sleep: madulo_tp_spi_sleep {
+    madula_tp_spi_sleep: madula_tp_spi_sleep {
         group1 {
             psels = <NRF_PSEL(SPIM_SCK,  1, 13)>,
                     <NRF_PSEL(SPIM_MOSI, 1, 15)>,
@@ -21,12 +21,12 @@
 };
 
 / {
-    madulo_trackpoint_listener: madulo_trackpoint_listener {
+    madula_trackpoint_listener: madula_trackpoint_listener {
         compatible = "zmk,input-listener";
-        device = <&madulo_trackpoint>;
+        device = <&madula_trackpoint>;
     };
 
-    madulo_trackpoint: analog_axis_hires_0 {
+    madula_trackpoint: analog_axis_hires_0 {
         compatible = "analog-axis-hires";
         status = "okay";
         poll-period-downshift-ms = <8 5000 100>;
@@ -34,7 +34,7 @@
 
         axis-x {
             status = "okay";
-            io-channels = <&madulo_ads1220 0>;
+            io-channels = <&madula_ads1220 0>;
             in-min = <(0 - 12000)>;
             in-max = <(0 + 12000)>;
             in-calib-cycle = <100>;
@@ -49,7 +49,7 @@
 
         axis-y {
             status = "okay";
-            io-channels = <&madulo_ads1220 1>;
+            io-channels = <&madula_ads1220 1>;
             in-min = <(0 - 12000)>;
             in-max = <(0 + 12000)>;
             in-calib-cycle = <100>;
@@ -66,12 +66,12 @@
 &spi0 {
     status = "okay";
     compatible = "nordic,nrf-spim";
-    pinctrl-0 = <&madulo_tp_spi_default>;
-    pinctrl-1 = <&madulo_tp_spi_sleep>;
+    pinctrl-0 = <&madula_tp_spi_default>;
+    pinctrl-1 = <&madula_tp_spi_sleep>;
     pinctrl-names = "default", "sleep";
     cs-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
 
-    madulo_ads1220: adc@0 {
+    madula_ads1220: adc@0 {
         compatible = "ti,ads1220";
         status = "okay";
         spi-max-frequency = <1000000>;

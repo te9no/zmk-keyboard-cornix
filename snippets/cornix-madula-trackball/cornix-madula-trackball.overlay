@@ -4,7 +4,7 @@
 #include <input/processors.dtsi>
 
 &pinctrl {
-    madulo_tb_spi_default: madulo_tb_spi_default {
+    madula_tb_spi_default: madula_tb_spi_default {
         group1 {
             psels = <NRF_PSEL(SPIM_SCK,  1, 13)>,
                     <NRF_PSEL(SPIM_MOSI, 1, 15)>,
@@ -12,7 +12,7 @@
         };
     };
 
-    madulo_tb_spi_sleep: madulo_tb_spi_sleep {
+    madula_tb_spi_sleep: madula_tb_spi_sleep {
         group1 {
             psels = <NRF_PSEL(SPIM_SCK,  1, 13)>,
                     <NRF_PSEL(SPIM_MOSI, 1, 15)>,
@@ -23,9 +23,9 @@
 };
 
 / {
-    madulo_trackball_listener: madulo_trackball_listener {
+    madula_trackball_listener: madula_trackball_listener {
         compatible = "zmk,input-listener";
-        device = <&madulo_trackball>;
+        device = <&madula_trackball>;
         input-processors = <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>;
     };
 };
@@ -33,12 +33,12 @@
 &spi0 {
     status = "okay";
     compatible = "nordic,nrf-spim";
-    pinctrl-0 = <&madulo_tb_spi_default>;
-    pinctrl-1 = <&madulo_tb_spi_sleep>;
+    pinctrl-0 = <&madula_tb_spi_default>;
+    pinctrl-1 = <&madula_tb_spi_sleep>;
     pinctrl-names = "default", "sleep";
     cs-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
 
-    madulo_trackball: trackball@0 {
+    madula_trackball: trackball@0 {
         status = "okay";
         compatible = "pixart,pmw3610";
         reg = <0>;

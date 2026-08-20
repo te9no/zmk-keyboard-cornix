@@ -1,17 +1,17 @@
 ---
 include:
-  # Cornix Madulo central with an interchangeable MeKaBu pointing module.
+  # Cornix Madula central with an interchangeable MeKaBu pointing module.
   # Both variants pair with the same cornix_ph_left/cornix_right peripherals
   # listed below; flash only one central variant at a time.
   - board: xiao_ble
-    shield: cornix_madulo_central
-    snippet: cornix-madulo-trackball zmk-usb-logging cornix-cdc-boot cornix-production-cdc
-    artifact-name: cornix_madulo_trackball
+    shield: cornix_madula_central
+    snippet: cornix-madula-trackball zmk-usb-logging cornix-cdc-boot cornix-production-cdc
+    artifact-name: cornix_madula_trackball
 
   - board: xiao_ble
-    shield: cornix_madulo_central
-    snippet: cornix-madulo-trackpoint zmk-usb-logging cornix-cdc-boot cornix-production-cdc
-    artifact-name: cornix_madulo_trackpoint
+    shield: cornix_madula_central
+    snippet: cornix-madula-trackpoint zmk-usb-logging cornix-cdc-boot cornix-production-cdc
+    artifact-name: cornix_madula_trackpoint
 
   # Production firmware
   - board: xiao_ble

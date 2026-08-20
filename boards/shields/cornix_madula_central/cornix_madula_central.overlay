@@ -7,11 +7,11 @@
     chosen {
         zmk,battery = &vbatt;
         zmk,physical-layout = &layout_50;
-        zmk,kscan = &madulo_kscan;
+        zmk,kscan = &madula_kscan;
     };
 
     aliases {
-        status-ws2812 = &madulo_led_strip;
+        status-ws2812 = &madula_led_strip;
     };
 
     vbatt: vbatt {
@@ -25,16 +25,16 @@
      * SW3/SW4/SW5 are wired independently to S1/S2/S3. The composite row
      * offset places them after the 50 Cornix positions (50, 51, 52).
      */
-    madulo_kscan: madulo_kscan {
+    madula_kscan: madula_kscan {
         compatible = "zmk,kscan-composite";
 
         direct {
             row-offset = <4>;
-            kscan = <&madulo_direct>;
+            kscan = <&madula_direct>;
         };
     };
 
-    madulo_direct: madulo_direct {
+    madula_direct: madula_direct {
         compatible = "zmk,kscan-gpio-direct";
         input-gpios =
             <&gpio0 4 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
@@ -43,7 +43,7 @@
     };
 
     /* QL5 is a high-side P-MOSFET, so LED_EN_L is active low. */
-    madulo_led_power: EXT_POWER {
+    madula_led_power: EXT_POWER {
         compatible = "zmk,ext-power-generic";
         control-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
         init-delay-ms = <10>;
@@ -63,13 +63,13 @@
 };
 
 &pinctrl {
-    madulo_led_spi_default: madulo_led_spi_default {
+    madula_led_spi_default: madula_led_spi_default {
         group1 {
             psels = <NRF_PSEL(SPIM_MOSI, 0, 28)>;
         };
     };
 
-    madulo_led_spi_sleep: madulo_led_spi_sleep {
+    madula_led_spi_sleep: madula_led_spi_sleep {
         group1 {
             psels = <NRF_PSEL(SPIM_MOSI, 0, 28)>;
             low-power-enable;
@@ -80,11 +80,11 @@
 &spi3 {
     compatible = "nordic,nrf-spim";
     status = "okay";
-    pinctrl-0 = <&madulo_led_spi_default>;
-    pinctrl-1 = <&madulo_led_spi_sleep>;
+    pinctrl-0 = <&madula_led_spi_default>;
+    pinctrl-1 = <&madula_led_spi_sleep>;
     pinctrl-names = "default", "sleep";
 
-    madulo_led_strip: ws2812@0 {
+    madula_led_strip: ws2812@0 {
         compatible = "worldsemi,ws2812-spi";
         status = "okay";
         reg = <0>;

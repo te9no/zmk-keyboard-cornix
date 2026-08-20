@@ -41,7 +41,7 @@ manifest:
       clone-depth: 1
 
     # Pointing-device drivers used by the interchangeable MeKaBu modules on
-    # the Cornix Madulo central.
+    # the Cornix Madula central.
     - name: ads1220-zephyr-module
       remote: te9no
       revision: 68071687cc7ea41e3eacc60521cb26b4311206e2
