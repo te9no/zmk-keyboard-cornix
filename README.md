@@ -1,448 +1,278 @@
 # ZMK Keyboard for Cornix
 
-## Introduction to Boards and Shields
+CornixをZMKで使用するためのボード定義、Centralシールド、キーマップ、ビルド設定を収録したリポジトリです。
 
-This repository contains the ZMK firmware configuration for the Cornix split keyboard. Below is an explanation of the different boards and shields available in this project:
+現在の標準構成は、ポインティングデバイスを搭載したCentral 1台と、Cornix左右のPeripheral 2台からなる3デバイス構成です。
 
-### Boards
+```text
+                     ┌─ cornix_ph_left（Peripheral）
+Central（XIAO BLE）──┤
+                     └─ cornix_right（Peripheral）
+```
 
-The project includes three main board definitions:
+## Madula — 外部感覚器をつなぐ「人工髄」
 
-- **`cornix_left`**: The left half of the Cornix split keyboard, used when building firmware without a dongle configuration.
-- **`cornix_right`**: The right half of the Cornix split keyboard, used for the slave side in split keyboard setup.
-- **`cornix_ph_left`**: Alternative left half board configuration, specifically designed for use with a dongle setup.
+Madulaは、Cornixに外部感覚器を接続するための「人工髄」です。
 
-### Shields
+TrackPoint、Trackball、Analog Stickなど、性質の異なる入力器官を受け入れ、その操作信号をCornix本体とホストへ中継する中枢インターフェースとして設計されています。キーボードを単なるキー入力装置ではなく、用途に応じて感覚器を交換・拡張できる身体として扱うための接続点です。
 
-The project includes several specialized shields that provide additional functionality:
+現時点でファームウェアが対応しているMeKaBuモジュールは次の3種類です。
 
-- **`cornix_dongle_adapter`**: Provides common functionality for the matrix and Bluetooth functionality for dongle configurations. This shield is required when using the Cornix with a custom dongle.
-- **`cornix_dongle_eyelash`**: An example shield for setting up display device for the dongle board. This is used when the board doesn't already have `zephyr,display` in the device tree.
-- **`cornix_indicator`**: A shield that enables RGB LED indicators for battery status and connection status. Note that using this shield consumes more power.
-- **`cornix_lpps_central`**: Xiao BLE/nRF52840 shield for an independent LPPS/ADS1220 four-terminal sensor module. It acts as the split central and reports relative X/Y pointer input.
-- **`cornix_tps43_central`**: Xiao BLE/nRF52840 shield for an independent Azoteq TPS43 trackpad module. It acts as the split central; Cornix halves should be built as peripherals (`cornix_ph_left` and `cornix_right`).
+- PMW3610 Trackball
+- ADS1220 LPPS TrackPoint
+- Azoteq IQS9151 Trackpad
 
----
+Analog StickなどはMadulaの拡張コンセプトに含まれますが、対応snippetは今後追加する必要があります。
 
-This community firmware has been tested with Cornix using ZMK and provides full split-role configuration, battery power management, and Bluetooth central/peripheral setup per ZMK split guidelines
+## ビルドターゲット
+
+実際の構成は[`build.yaml`](build.yaml)が正です。
+
+### 通常使用
+
+| ターゲット | 書き込み先 | 用途 |
+| --- | --- | --- |
+| `madula_trackball` | Madula Central | PMW3610 Trackball |
+| `madula_trackpoint` | Madula Central | ADS1220 LPPS TrackPoint |
+| `madula_iqs` | Madula Central | Azoteq IQS9151 Trackpad |
+| `cornix_tps43_production` | Cornix TP Central | TPS43・DYA Studio・内蔵RGBステータスLED |
+| `cornix_left_production` | Cornix左 | 外部Central構成用Peripheral |
+| `cornix_right_production` | Cornix右 | 外部Central構成用Peripheral |
+
+MadulaまたはTPS43のCentralファームウェアを1つ選び、左右のProductionファームウェアと組み合わせます。複数のCentralを同時には使用しません。
+
+### ペアリング復旧
+
+| ターゲット | 用途 |
+| --- | --- |
+| `cornix_tps43_host_bond_reset` | TPS43 Centralのホスト情報を消去し、左右Peripheralのbondは維持 |
+| `cornix_left_bond_reset` | 左Peripheralの設定を一度だけ消去 |
+| `cornix_right_bond_reset` | 右Peripheralの設定を一度だけ消去 |
+
+### 全設定リセット
+
+| ターゲット | 書き込み先 |
+| --- | --- |
+| `cornix_tps43_settings_reset` | XIAO BLE Central |
+| `cornix_left_settings_reset` | Cornix左 |
+| `cornix_right_settings_reset` | Cornix右 |
+
+## `just.sh`でビルドする
+
+このワークスペースのルートで実行します。初回のみ依存関係を初期化してください。
+
+```bash
+./just.sh init config/zmk-keyboard-cornix
+```
+
+### Madula + Trackball
+
+```bash
+./just.sh build madula_trackball
+./just.sh build cornix_left_production
+./just.sh build cornix_right_production
+```
+
+### Madula + TrackPoint
+
+```bash
+./just.sh build madula_trackpoint
+./just.sh build cornix_left_production
+./just.sh build cornix_right_production
+```
+
+### Madula + IQS Trackpad
+
+```bash
+./just.sh build madula_iqs
+./just.sh build cornix_left_production
+./just.sh build cornix_right_production
+```
+
+### Cornix TP + TPS43
+
+```bash
+./just.sh build cornix_tps43_production
+./just.sh build cornix_left_production
+./just.sh build cornix_right_production
+```
+
+全ターゲットをビルドする場合は次を使用します。
+
+```bash
+./just.sh build all
+```
+
+生成物は次のディレクトリへコピーされます。
+
+```text
+firmware/zmk-keyboard-cornix/<ブランチ名>/
+```
+
+## 書き込みと初回接続
+
+1. 対象デバイスをUF2ブートローダーモードにします。通常はResetを素早く2回押します。
+2. 表示されたUSBドライブへ、対応する`.uf2`ファイルをコピーします。
+3. 左右PeripheralとCentralの電源を入れ直します。
+4. ホストPCからCentralのBluetoothプロファイルへ接続します。
+
+既存のbondが原因で接続できない場合は、上記のペアリング復旧ターゲットを使用してください。設定全体の消去は、ペアリング復旧で解決しない場合に限って使用します。
+
+## Madula Centralのハードウェア
+
+`madula_central`は、XIAO BLEを搭載したMadulaをCornixのSplit Centralとして動作させるシールドです。J4へ接続するMeKaBuモジュールに合わせ、Trackball、TrackPoint、IQS Trackpad用snippetのいずれかを選択します。
+
+### J4モジュール端子
+
+| J4 | 信号 | XIAO BLE GPIO | PMW3610 | ADS1220 LPPS | IQS9151 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | NCS | P1.12 / D7 | CS | CS | IRQ |
+| 2 | SCLK | P1.13 / D8 | SCLK | SCLK | I²C SCL |
+| 3 | MOTION | P1.14 / D9 | Motion IRQ | MISO | 未使用 |
+| 4 | SDIO | P1.15 / D10 | MOSI/MISO共用 | MOSI | I²C SDA |
+| 5 | 3V3 | — | 3.3 V | 3.3 V | 3.3 V |
+| 6 | GND | — | GND | GND | GND |
+
+PMW3610では半二重SPIとしてP1.15をMOSI/MISOで共用します。ADS1220 LPPSではP1.14をMISO、P1.15をMOSIとして使用します。IQS9151は400 kHz I²C、アドレス`0x56`で動作し、P1.12をActive LowのIRQとして使用します。ジェスチャーとフィルターの初期値はGeaconPolarisの実装を基準にしています。
+
+### Direct GPIOキー
+
+SW3、SW4、SW5は、マトリクスを介さない独立したActive LowのDirect GPIOキーです。
+
+| スイッチ | GPIO | キーマップ位置 | Baseレイヤー初期値 |
+| --- | --- | --- | --- |
+| SW3 | P0.04 / D4 | 50 | 左クリック |
+| SW4 | P0.05 / D5 | 51 | 中クリック |
+| SW5 | P1.11 / D6 | 52 | 右クリック |
+
+### WS2812ステータスLED
+
+SparAkashaAnantaの省電力実装を参考にしています。
+
+- Data: P0.28 / D2
+- LED電源制御: P0.03 / D1、Active Low
+- LED数: 1
+- バッテリー、接続、レイヤー表示でLED 0を共有
+- 15秒後にLED電源を自動OFF
+- バッテリー電圧: P0.02 / D0 / ADC0
+
+## Cornix TP / TPS43 Central
+
+`cornix_tps43_central`は、XIAO BLEとAzoteq TPS43をCornixのSplit Centralとして動作させます。TPS43は筐体内で90度回転しているため、ファームウェア側でX/Yの入れ替えと反転を行います。
+
+### TPS43配線
+
+以下は現在の[`cornix_tps43_central.overlay`](boards/shields/cornix_tps43_central/cornix_tps43_central.overlay)に基づく値です。
+
+| TPS43 | XIAO BLE |
+| --- | --- |
+| VDDHI | 3V3 |
+| GND | GND |
+| SDA | P0.28 / D2 |
+| SCL | P0.05 / D5 |
+| RDY | P0.29 / D3 |
+| NRST | P0.04 / D4 |
+| Battery sense | P0.02 / D0 / ADC0 |
+
+I2Cアドレスは`0x74`、バス速度はFast modeです。
+
+### XIAO内蔵RGBステータスLED
+
+起動時は、バッテリー状態を表示した後に接続状態を表示し、その後消灯します。
+
+バッテリー表示：
+
+| 色 | 状態 |
+| --- | --- |
+| 緑 | 80%以上 |
+| 黄 | 20～79% |
+| 赤 | 20%未満 |
+| 白 | バッテリー値を取得できない |
+
+接続表示：
+
+| 色 | 状態 |
+| --- | --- |
+| シアン | USB接続 |
+| 青 | BLE接続済み |
+| 黄 | BLE広告中 |
+| 赤 | 未接続 |
+
+通常時は省電力のため消灯し、レイヤー変更時のみ120 ms点灯します。
+
+| レイヤー | 色 |
+| --- | --- |
+| Base | 青 |
+| Function | 赤 |
+| Number | 緑 |
+| Adjust | 黄 |
+| Navigation | シアン |
 
 ## DYA Studio V2
 
-The TPS43 dongle firmware supports [DYA Studio](https://studio.dya.cormoran.works/) over a dedicated USB serial interface. Connect the `cornix_tps43_production` device to the browser and select the Studio serial port, not the separate ZMK logging port.
+`cornix_tps43_production`と`cornix_tps43_host_bond_reset`は、[DYA Studio](https://studio.dya.cormoran.works/)に対応しています。
 
-Available features:
+TPS43 CentralをUSB接続し、ブラウザーからStudio用シリアルポートを選択してください。ZMKログ用ポートとは別のポートです。
 
-- Physical-layout-aware keymap editing
-- Runtime combo and macro configuration
-- Per-layer left/right encoder configuration
-- Runtime US/JIS layout shift using the Adjust-layer toggle
-- TPS43 pointer and scroll tuning through runtime input processors
-- Bluetooth profile management and settings access
-- Device and firmware information
-- Central watchdog and reset history
-- Left/right key switch diagnostics relayed through the TPS43 Central
-- Thread stack usage and other development diagnostics
+主な機能：
 
-The three-device topology has one TPS43 Central and two keyboard peripherals. Watchdog relay is intentionally disabled because its broadcast transport does not distinguish multiple peripherals. Watchdog information therefore describes the TPS43 Central, while KScan diagnostics identify and aggregate events from both keyboard halves.
+- 物理レイアウト対応キーマップ編集
+- Combo、Macroのランタイム設定
+- 左右Encoderのレイヤー別設定
+- US/JIS Layout Shift
+- TPS43のカーソル、スクロール調整
+- Bluetoothプロファイルと設定の管理
+- デバイス、ファームウェア情報
+- CentralのWatchdog、リセット履歴
+- 左右Peripheralのキースイッチ診断
+- スレッドスタック使用量などの開発情報
 
-The DYA Studio configuration is included in `cornix_tps43_production` and `cornix_tps43_host_bond_reset`. The left and right production/recovery images include only the peripheral diagnostic relay. Settings-reset images remain minimal and do not expose Studio.
+WatchdogはTPS43 Centralを監視します。KScan診断は左右Peripheralからの情報をCentral経由で集約します。Settings ResetファームウェアはStudioを公開しません。
 
-The TPS43 Central uses the XIAO nRF52840's built-in RGB LED as a low-power layer indicator. It flashes for 120 ms after a layer change, then turns off. The colors are blue for Base, red for Function, green for Number, yellow for Adjust, and cyan for Navigation.
+## ボードとシールド
 
-### DYA Studio V2 / 日本語
+### ボード
 
-TPS43 ドングルを USB 接続し、[DYA Studio](https://studio.dya.cormoran.works/) から Studio 用シリアルポートを選択します。ZMK ログ用ポートとは別のポートです。
-
-DYA Studio では、キーマップ、Combo、Macro、左右エンコーダーのレイヤー別動作、Bluetooth 設定、TPS43 のカーソル・スクロール調整、デバイス情報、Watchdog、左右キースイッチ診断、スタック使用量を確認または変更できます。Adjust レイヤー左端の `Layout Shift` キーでは、US 配列と JIS 配列向けのキーコード変換を切り替えられます。Watchdog は TPS43 Central のみを監視し、KScan 診断は左右 Peripheral の情報を Central 経由で集約します。
-
-TPS43 Central の XIAO nRF52840 内蔵RGB LEDは、省電力のためレイヤー変化直後だけ120ms点灯し、その後は消灯します。Baseは青、Functionは赤、Numberは緑、Adjustは黄、Navigationはシアンです。
-
-
-![image](images/cornix_with_dongle.png)
-![image](images/cornix_layout.png)
-
-## warning：device breakdown recovery
-
-the original cornix use flash layout without softdevice
-so in the project. all board use nosd layout as default 
-
-if you flash firmware into dongle and found it can't work with the original  firmware 
-you have two solutions 
-
-1. （recommend）flash the sd restore uf2 under boooader direcotry（its for nice nano 2 ，but i think it works for most of nrf52840 device） other boards https://github.com/hitsmaxft/Adafruit_nRF52_Bootloader/actions/runs/18398554358
-2. build your firmware  with snippet  'nrf
-52840-nosd', make zmk ignore soft device 
-
-
-## TODO LIST
-
-- [x] 52 keys full layout keymap, since v2.0
-- [x] ec11 encoder, since v2.2
-- [x] no-SD image, since v2.3
-- [x] support various of dongles
-- [x] upgrade to zephyr4.1 and lvgl9 , since v2.7, no dongle screen support yet
-- [x] RGB status indicators for the TPS43 Central and Cornix peripherals
-
-
-### about RGB
-
-Cornix has two RGB LEDs on each keyboard half, while the TPS43 Central uses the XIAO nRF52840's built-in three-channel RGB LED. The keyboard peripherals use `zmk-rgbled-widget`; the Central uses the lightweight `cornix-central-rgb-led` snippet for layer indication.
-
-## Supported Hardware: Cornix Split Keyboard
-
-Cornix Split Tented Low‑Profile Ergo Keyboard (Jezail Funder)
-
-Cornix is a Corne‑inspired split ergonomic keyboard featuring a compact 3×6 column‑staggered layout with six thumb‑cluster keys (three per half). It offers adjustable tenting angles at 10°, 18°, and 25°, allowing users to reduce wrist strain and find a custom ergonomic alignment
-
-- **Split, column‑staggered layout** (3×6 + thumb cluster layout).
-- **Adjustable tenting support** at 10°, 18°, 25° (hardware‑based, no firmware hacks).
-- **Kailh Choc V2 hot‑swap sockets** and support for LAK or LCK low‑profile keycaps.
-- **Dual‑mode connectivity**: Wired USB‑C or Bluetooth wireless (left half as master).
-- **Firmware**: Fully VIAL‑supported for keymaps and layer customization, stock firmware is RMK.
-- Premium **CNC‑machined aluminum chassis**, custom damping foam, and portable storage pouch.
-
-> this project owner is RMK contributor too, support RMK https://rmk.rs/ please
-
-## --Bootloader Recovery Instructions--
-
--- The original RMK firmware removed the SoftDevice, so before flashing `zmk.uf2`, you need to restore the SoftDevice first. For specific steps, please refer to [bootloader/README.md](./bootloader/README.md). --
-
-Since v2.3 this board' flash partitions has updated, removed SD (reducing sd partitionsize size from 150K to 4K), so You can flash firmware directly.
-
-> You may need to reset fw by reset.uf2 from ealier version
-
-> You can rollback to stock firmware by flash orgin uf2 file, backup files under rmkfw/
-
-## 🔰 Easy Method: Clone This Repository and Build with GitHub Actions
-
-If you're new to ZMK and don't want to deal with `west.yml` or module management, you can simply use this repository directly to customize your firmware.
-
-### Steps
-
-1. **Fork or Clone This Repository**
-   - Click **Fork** in the top right to copy this repo to your GitHub account, or
-   - Run `git clone` locally.
-
-   > Forking is recommended, because GitHub Actions will automatically build your firmware.
-
-2. **Edit Your Keymap**
-   - Locate the keymap file in `config/cornix.keymap` (or whichever `.keymap` file you want to customize).
-   - You can edit it directly or use the [ZMK Keymap Editor](https://nickcoutsos.github.io/keymap-editor/):
-     - Open the editor and load your `.keymap` file.
-     - Make changes with the visual editor.
-     - Download the updated file and replace it in your repository.
-     - Commit and push the changes to GitHub.
-
-3. **Build with GitHub Actions**
-   - After pushing, GitHub Actions will automatically run the build.
-   - Once the workflow finishes, go to **Actions → your latest run → Artifacts** and download the firmware (`.uf2`) files.
-
-4. **Flash Your Keyboard**
-   - Put your board into UF2 bootloader mode (usually by double-tapping the reset button).
-   - Drag and drop the `.uf2` file onto the mounted drive.
-
-### Who Is This For?
-
-- Beginners to ZMK
-- Users who only want to customize keymaps
-- Anyone who doesn't need to modify drivers or hardware definitions
-
-## How to build Cornix Zmk firmware from scratch
-
-This section will guide you through building the Cornix ZMK firmware from scratch using the official ZMK firmware development process.
-
-
-### Prerequisites
-
-Before starting, ensure you have the following:
-- A GitHub account
- Git installed on your system
-- Basic understanding of Git and GitHub
-- Your Cornix keyboard PCBs ready
-
-### Step 1: Initialize ZMK Config Repository
-
-1. **Create a new repository** using the official ZMK config template:
-   - Visit: https://github.com/zmkfirmware/unified-zmk-config-template
-   - Click "Use this template" → "Create a new repository"
-   - Name your repository (e.g., `cornix-zmk-config`)
-   - Choose "Public" or "Private" as preferred
-   - Click "Create repository"
-
-2. **Clone your new repository locally**:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-   cd YOUR_REPO_NAME
-   ```
-
-3. **Initialize ZMK development environment**:
-   ```bash
-   west init -l config/
-   west update
-   west zephyr-export
-   ```
-
-> **Important**: You should thoroughly read the ZMK documentation before proceeding, as ZMK firmware development has a learning curve.
-> - ZMK Customization Guide: https://zmk.dev/docs/customization
-> - ZMK Configuration: https://zmk.dev/docs/user-setup
-
-### Step 2: Add Cornix Shield to Your Project
-
-After initializing your zmk-config repository, follow the steps in the next section to integrate the Cornix shield.
-
-## How to Add Cornix Shield to Existing ZMK Project
-
-For users with existing zmk-config, add this repository dependency via west.yml and pull the latest version via west update:
-
-### 1. Modify west.yml
-
-Edit the `config/west.yml` file, add to the `manifest/remotes` section:
-
-```yaml
-remotes:
-  - name: zmkfirmware
-    url-base: https://github.com/zmkfirmware
-  - name: cornix-shield
-    url-base: https://github.com/hitsmaxft
-  - name: urob
-    url-base: https://github.com/urob
-```
-
-Add to the `manifest/projects` section:
-
-```yaml
-projects:
-  - name: zmk
-    remote: zmkfirmware
-    revision: main
-    import: app/west.yml
-  - name: zmk-keyboard-cornix
-    remote: cornix-shield
-    revision: main
-  - name: zmk-helpers
-    remote: urob
-    revision: main
-```
-
-### 2. Update Dependencies
-
-```bash
-west update
-```
-
-### 3. Configure Build
-
-Edit the `build.yaml` file, add:
-
-> [!NOTE]
-> 1. If you are using (default) cornix without dongle, choose "cornix_left", "cornix_right" and "reset".
-> 2. If you are using cornix with dongle, choose "cornix_dongle". "cornix_left_for_dongle", "cornix_right" and "reset".
-> 3. Add "cornix_indicator" shield to enable RGB led light. It consumes much more power, use at your own risk.
-
-```yaml
-include:
-  # Use cornix with dongle
-  - board: nice_nano
-    shield: cornix_dongle_adaptor cornix_dongle_eyelash dongle_display
-    snippet: studio-rpc-usb-uart
-    artifact-name: cornix_dongle
-
-  - board: cornix_ph_left
-    # shield: cornix_indicator
-    artifact-name: cornix_left_for_dongle
-
-  # Use cornix without dongle
-  - board: cornix_left
-    # shield: cornix_indicator
-    artifact-name: cornix_left
-
-  - board: cornix_right
-    # shield: cornix_indicator
-    artifact-name: cornix_right
-
-  - board: cornix_right
-    shield: settings_reset
-    artifact-name: reset
-```
-
-### 4. Build Firmware
-
-Use your preferred method to build
-
-- no need to recovery the sd since 2.3
-- falsh reset.uf2 both side of cornix
-- flash left and right uf2 files
-- reset both side at the same time.
-
-### 5. Flash Firmware
-
-Flash the generated `.uf2` files to the corresponding microcontroller:
-- Left half: `build/left/zephyr/zmk.uf2`
-- Right half: `build/right/zephyr/zmk.uf2`
-
-## Dongle Adapter Shield for Custom Dongle Users
-
-For users who want to create their own custom dongle configurations, this repository provides a adapter shield. The complete configuration for the Cornix dongle can use multiple shields:
-
-1. **`cornix_dongle_adapter`** - This is the common shield for the matrix and Bluetooth functionality
-2. **`dongle_display`** - This is the display module for the dongle screen (or another display project)
-3. **`cornix_dongle_eyelash`** - This is an example shield for setting up display device for the board (if the board already has `zephyr,display` in the device tree, this display overlay shield is not needed)
-
-The configuration in the `build.yaml` file shows how to use these shields for the eyelash dongle:
-```yaml
-include:
-  # Use cornix with dongle
-  - board: nice_nano
-    shield: cornix_dongle_adapter cornix_dongle_eyelash dongle_display
-    snippet: studio-rpc-usb-uart
-    artifact-name: cornix_dongle
-```
-
-To create a custom shield for the display part:
-1. The `dongle_display` module is a module contains display widgets, included as part of the project dependencies via west or locally
-2. If you need to create a custom shield for your display hardware, you can create a new shield that provides the appropriate display configuration. Here shows `cornix_dongle_eyelash` as an example
-3. If your board already has `zephyr,display` in the device tree, you can omit the `cornix_dongle_eyelash` shield
-4. Include your custom shield in the build configuration
-
-For custom dongle screens, add a new target in build.yaml for your custom dongle:
-```yaml
-- board: nice_nano
-  shield: cornix_dongle_adapter cornix_dongle_eyelash dongle_display
-  snippet: studio-rpc-usb-uart zmk-usb-logging
-  artifact-name: cornix_dongle
-```
-
-To create a custom shield for your display:
-1. Use `cornix_dongle_adapter` as the base shield for the matrix and Bluetooth functionality
-2. Add your custom shield in the `build.yaml` file with the appropriate board and configuration
-3. Use `cornix_dongle_eyelash` as an example and modify the display parts to match your custom board
-4. You can copy the `cornix_dongle_eyelash` into your project's `boards/shield/` directory, and use the same name or rename it as a new shield
-
-The configuration in the `west.yml` file remains the same:
-```yaml
-remotes:
-  - name: zmkfirmware
-    url-base: https://github.com/zmkfirmware
-  - name: cornix-shield
-    url-base: https://github.com/hitsmaxft
-  - name: urob
-    url-base: https://github.com/urob
-```
-```yaml
-projects:
-  - name: zmk
-    remote: zmkfirmware
-    revision: main
-    import: app/west.yml
-  - name: zmk-keyboard-cornix
-    remote: cornix-shield
-    revision: main
-  - name: zmk-helpers
-    remote: urob
-    revision: main
-```
-
-## LPPS ADS1220 Central
-
-The `cornix_lpps_central` shield turns an independent Xiao BLE/nRF52840 + ADS1220 LPPS module into the Cornix split central. In this mode the keyboard halves are peripherals, so build and flash:
-
-```yaml
-include:
-  - board: xiao_ble
-    shield: cornix_lpps_central
-    snippet: studio-rpc-usb-uart
-    artifact-name: cornix_lpps_central
-
-  - board: cornix_ph_left
-    artifact-name: cornix_left_for_lpps_nosd
-
-  - board: cornix_right
-    artifact-name: cornix_right_for_lpps_nosd
-```
-
-Default LPPS/ADS1220 wiring in `cornix_lpps_central.overlay`:
-
-| ADS1220 / LPPS | Xiao BLE |
+| ID | 役割 |
 | --- | --- |
-| VCC | 3V3 from the battery-powered regulator |
-| GND | GND |
-| SCLK | D8 / Xiao SPI SCK |
-| MISO | D9 / Xiao SPI MISO |
-| MOSI | D10 / Xiao SPI MOSI |
-| CS | D7 |
-| DRDY | D6 |
-| Battery sense | D0 / AIN0 |
+| `cornix_left` | Cornix左を単独Centralとして使用する従来構成 |
+| `cornix_ph_left` | 外部Central構成で使用する左Peripheral |
+| `cornix_right` | Cornix右Peripheral |
 
-The four-terminal sensor is configured as two high-resolution relative axes through the ADS1220 module's `analog-axis-hires` driver. The default channel setup follows the module's four-wire trackpoint example: X uses `AIN0` against `AIN2`, Y uses `AIN1` against `AIN2`, and IDAC excitation is routed to `REFP0` with `REFN0` as the external reference low side. Update `zephyr,input-positive`, `zephyr,input-negative`, and `zephyr,current-source-pin` if the LPPS PCB maps the four sensor terminals differently.
+Cornix PCBはEbyte E73-2G4M08S1C（nRF52840）を使用します。
 
-## TPS43 Trackpad Central
+### Centralシールド
 
-The `cornix_tps43_central` shield turns an independent Xiao BLE/nRF52840 + Azoteq TPS43 module into the Cornix split central. In this mode the keyboard halves are peripherals, so build and flash:
+| ID | 機能 |
+| --- | --- |
+| `madula_central` | MeKaBu Trackball／TrackPoint／IQS Trackpad対応Central |
+| `cornix_tps43_central` | TPS43 Trackpad・DYA Studio対応Central |
 
-```yaml
-include:
-  - board: xiao_ble
-    shield: cornix_tps43_central
-    snippet: studio-rpc-usb-uart
-    artifact-name: cornix_tps43_central
+## キーマップ
 
-  - board: cornix_ph_left
-    artifact-name: cornix_left_for_tps43_nosd
+Madulaの入口キーマップは[`config/madula.keymap`](config/madula.keymap)です。共通の[`config/cornix.keymap`](config/cornix.keymap)を読み込み、3つのDirect GPIOキーを既存のCornix 50位置の後ろへ追加します。
 
-  - board: cornix_right
-    artifact-name: cornix_right_for_tps43_nosd
+キーマップ変更後は対象となるCentralと左右Peripheralを再ビルドしてください。
+
+## SoftDeviceとブートローダー
+
+Cornixの旧RMKファームウェアはSoftDeviceを使用しないFlash配置でした。本リポジトリの現行ボード定義もno-SD配置を使用するため、通常はSoftDeviceの復元なしで書き込めます。
+
+古いファームウェアからの移行で起動できない場合は、[`bootloader/README.md`](bootloader/README.md)を確認してください。以前の設定データが残っている場合は、対応するSettings Resetファームウェアが必要になることがあります。
+
+## リポジトリ構成
+
+```text
+boards/jzf/cornix/                 Cornix左右のボード定義
+boards/shields/                    Madula・TPS43 Centralシールド
+config/cornix.keymap               共通キーマップ
+config/madula.keymap               Madula用キーマップ入口
+config/west.yml                    ZMKと追加モジュールの依存関係
+snippets/                          入力器官・復旧・LED設定
+src/                               このリポジトリ固有のZMK拡張
+build.yaml                         just.sh/GitHub Actionsのビルド対象
 ```
 
-Default TPS43 wiring in `cornix_tps43_central.overlay`:
+## ライセンス
 
-| TPS43 | Xiao BLE |
-| --- | --- |
-| VDDHI | 3V3 from the battery-powered regulator |
-| GND | GND |
-| SDA | D4 / Xiao I2C SDA |
-| SCL | D5 / Xiao I2C SCL |
-| RDY | D3 |
-| NRST | D2 |
-| Battery sense | D0 / AIN0 |
-
-If the trackpad PCB uses different RDY or NRST pins, update only `rdy-gpios` and `reset-gpios` in `boards/shields/cornix_tps43_central/cornix_tps43_central.overlay`.
-Battery sense is configured as a 1:1 ADC input on D0/AIN0. If the hardware uses a resistor divider, update `output-ohms` and `full-ohms` in the same overlay. Standard ZMK reports the voltage through its built-in battery driver, but its percentage conversion is Li-ion oriented; dry-cell-specific percentage mapping would need a custom battery driver/module.
-
-## Build This Project Locally (Without west.yaml Dependency)
-
-If you prefer to build this project locally without adding it as a dependency in your west.yaml, you can use the ZMK_EXTRA_MODULES cmake argument.
-
-### Prerequisites
-
-1. Have a working ZMK development environment set up
-2. Clone this repository to a local directory
-
-### Build Steps
-
-1. **Clone this repository**:
-   ```bash
-   git clone https://github.com/hitsmaxft/zmk-keyboard-cornix.git
-   ```
-
-2. **Configure your ZMK build with the extra module**:
-
-   Edit your `.west/config` file and add the cmake argument under the `[build]` section:
-
-   ```ini
-   [build]
-   cmake-args = -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DZMK_EXTRA_MODULES=/full/absolute/path/to/zmk-keyboard-cornix
-   ```
-
-   Replace `/full/absolute/path/to/zmk-keyboard-cornix` with the actual absolute path where you cloned this repository.
-
-3. **Build the firmware**:
-   ```bash
-<<<<<<< HEAD
-   west build -b cornix_main_left
-=======
-   west build -b cornix_left
->>>>>>> 16dcccb (migrate to zephyr4 , disable dongle screen)
-   west build -b cornix_right
-   ```
-
-This method allows you to use the Cornix shield without modifying your existing ZMK configuration's west.yaml file.
+各ファイルのSPDX表記に従います。

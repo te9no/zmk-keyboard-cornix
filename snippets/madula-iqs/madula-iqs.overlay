@@ -1,0 +1,46 @@
+/* MeKaBu IQS9151 input organ for Madula. */
+#include <dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+
+&pinctrl {
+    madula_iqs_i2c_default: madula_iqs_i2c_default {
+        group1 {
+            psels = <NRF_PSEL(TWIM_SDA, 1, 15)>,
+                    <NRF_PSEL(TWIM_SCL, 1, 13)>;
+            bias-pull-up;
+        };
+    };
+
+    madula_iqs_i2c_sleep: madula_iqs_i2c_sleep {
+        group1 {
+            psels = <NRF_PSEL(TWIM_SDA, 1, 15)>,
+                    <NRF_PSEL(TWIM_SCL, 1, 13)>;
+            low-power-enable;
+            bias-pull-up;
+        };
+    };
+};
+
+/ {
+    madula_iqs_listener: madula_iqs_listener {
+        compatible = "zmk,input-listener";
+        status = "okay";
+        device = <&madula_iqs9151>;
+    };
+};
+
+&i2c0 {
+    status = "okay";
+    compatible = "nordic,nrf-twim";
+    pinctrl-0 = <&madula_iqs_i2c_default>;
+    pinctrl-1 = <&madula_iqs_i2c_sleep>;
+    pinctrl-names = "default", "sleep";
+    clock-frequency = <400000>;
+
+    madula_iqs9151: iqs9151@56 {
+        compatible = "azoteq,iqs9151";
+        reg = <0x56>;
+        status = "okay";
+        irq-gpios = <&gpio1 12 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+    };
+};

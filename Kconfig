@@ -31,4 +31,37 @@ config CORNIX_CENTRAL_RGB_LED_DURATION_MS
     range 20 2000
     default 120
 
+config CORNIX_CENTRAL_RGB_LED_BOOT_STATUS
+    bool "Show battery and connection status at boot"
+    default y
+
+if CORNIX_CENTRAL_RGB_LED_BOOT_STATUS
+
+config CORNIX_CENTRAL_RGB_LED_BOOT_DELAY_MS
+    int "Delay before the boot status sequence"
+    range 0 5000
+    default 200
+
+config CORNIX_CENTRAL_RGB_LED_STATUS_DURATION_MS
+    int "Duration of each boot status indication"
+    range 100 5000
+    default 500
+
+config CORNIX_CENTRAL_RGB_LED_STATUS_INTERVAL_MS
+    int "Dark interval between boot status indications"
+    range 20 2000
+    default 150
+
+config CORNIX_CENTRAL_RGB_LED_BATTERY_LEVEL_HIGH
+    int "High battery threshold"
+    range 1 100
+    default 80
+
+config CORNIX_CENTRAL_RGB_LED_BATTERY_LEVEL_LOW
+    int "Low battery threshold"
+    range 0 99
+    default 20
+
+endif
+
 endif

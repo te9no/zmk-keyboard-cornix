@@ -66,6 +66,7 @@
                 &kp UP    &kp SLASH    &mt LEFT_CONTROL ESCAPE    &kp LEFT_GUI    &kp LEFT_ALT    &lt 2 SPACE
                 &lt 3 SPACE    &kp BACKSPACE    &kp LANG1    &kp LANG2    &none    &kp LEFT
                 &kp DOWN    &kp RIGHT
+                &mkp LCLK   &mkp MCLK   &mkp RCLK
             >;
             sensor-bindings = <&rsr_left>, <&rsr_right>;
         };
@@ -80,6 +81,7 @@
                 &trans    &trans    &none    &none    &none    &trans
                 &trans    &kp BACKSPACE    &trans    &trans    &trans    &none
                 &none    &none
+                &trans   &trans   &trans
             >;
             sensor-bindings = <&rsr_left>, <&rsr_right>;
         };
@@ -94,6 +96,7 @@
                 &trans    &trans    &none    &none    &none    &kp RETURN
                 &none    &none    &none    &none    &trans    &none
                 &none    &none
+                &trans   &trans   &trans
             >;
             sensor-bindings = <&rsr_left>, <&rsr_right>;
         };
@@ -108,6 +111,7 @@
                 &trans    &trans    &none    &none    &none    &trans
                 &trans    &trans    &none    &none    &trans    &none
                 &none    &none
+                &trans   &trans   &trans
             >;
             sensor-bindings = <&rsr_left>, <&rsr_right>;
         };
@@ -122,6 +126,7 @@
                 &none    &none    &none    &none    &none    &mo 7
                 &trans    &trans    &none    &none    &kp N5    &none
                 &none    &none
+                &trans   &trans   &trans
             >;
             sensor-bindings = <&rsr_left>, <&rsr_right>;
         };

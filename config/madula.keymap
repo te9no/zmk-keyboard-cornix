@@ -1,0 +1,2 @@
+/* Madula uses the Cornix split layout and appends its three direct GPIO keys. */
+#include "cornix.keymap"

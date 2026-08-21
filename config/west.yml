@@ -26,7 +26,7 @@ manifest:
         file: app/west.yml
     - name: zmk-helpers
       remote: urob
-      revision: main
+      revision: 95edb8f15ef1d1bd8332810555f8cf5837fbdd27
       clone-depth: 1
     - name: zmk-layout-shift
       revision: 0f2fad97b32332e1832377aa8afd1ec213829190
@@ -37,8 +37,21 @@ manifest:
       revision: 6ac6efe7e0902ccef4ef3893ab0054535e727566
     - name: zmk-driver-azoteq-iqs5xx
       remote: AYM1607
-      revision: main
+      revision: 27321f0232b50f0af31eb27ff97d539933467ea4
       clone-depth: 1
+
+    # Pointing-device drivers used by the interchangeable MeKaBu modules on
+    # the Madula central.
+    - name: ads1220-zephyr-module
+      remote: te9no
+      revision: 68071687cc7ea41e3eacc60521cb26b4311206e2
+
+    # IQS9151 trackpad driver used by the MeKaBu IQS module on Madula.
+    # Keep this revision aligned with the proven GeaconPolaris configuration.
+    - name: zmk-driver-iqs9151-upstream
+      url: https://github.com/ShiniNet/zmk-driver-iqs9151
+      revision: 08a6fd19c5aa5ae7f11daf371b5a391cd8596783
+      path: modules/zmk-driver-iqs9151-upstream
 
     # DYA Studio V2 runtime configuration and diagnostics.
     - name: zmk-module-runtime-input-processor

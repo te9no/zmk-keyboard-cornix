@@ -1,0 +1,9 @@
+file_format: "1"
+id: madula_central
+name: Madula Central
+type: shield
+url: https://github.com/te9no/zmk-keyboard-cornix
+requires:
+  - xiao_ble
+features:
+  - pointer
