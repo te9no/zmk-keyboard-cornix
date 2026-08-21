@@ -1,0 +1,5 @@
+# Copyright (c) 2026
+# SPDX-License-Identifier: MIT
+
+config SHIELD_MADULA_CENTRAL
+    def_bool $(shields_list_contains,madula_central)

@@ -1,17 +1,22 @@
 ---
 include:
-  # Cornix Madula central with an interchangeable MeKaBu pointing module.
+  # Madula central with an interchangeable MeKaBu pointing module.
   # Both variants pair with the same cornix_ph_left/cornix_right peripherals
   # listed below; flash only one central variant at a time.
   - board: xiao_ble
-    shield: cornix_madula_central
-    snippet: cornix-madula-trackball zmk-usb-logging cornix-cdc-boot cornix-production-cdc
-    artifact-name: cornix_madula_trackball
+    shield: madula_central
+    snippet: madula-trackball zmk-usb-logging cornix-cdc-boot cornix-production-cdc
+    artifact-name: madula_trackball
 
   - board: xiao_ble
-    shield: cornix_madula_central
-    snippet: cornix-madula-trackpoint zmk-usb-logging cornix-cdc-boot cornix-production-cdc
-    artifact-name: cornix_madula_trackpoint
+    shield: madula_central
+    snippet: madula-trackpoint zmk-usb-logging cornix-cdc-boot cornix-production-cdc
+    artifact-name: madula_trackpoint
+
+  - board: xiao_ble
+    shield: madula_central
+    snippet: madula-iqs zmk-usb-logging cornix-cdc-boot cornix-production-cdc
+    artifact-name: madula_iqs
 
   # Production firmware
   - board: xiao_ble

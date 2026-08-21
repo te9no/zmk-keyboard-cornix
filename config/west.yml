@@ -41,10 +41,17 @@ manifest:
       clone-depth: 1
 
     # Pointing-device drivers used by the interchangeable MeKaBu modules on
-    # the Cornix Madula central.
+    # the Madula central.
     - name: ads1220-zephyr-module
       remote: te9no
       revision: 68071687cc7ea41e3eacc60521cb26b4311206e2
+
+    # IQS9151 trackpad driver used by the MeKaBu IQS module on Madula.
+    # Keep this revision aligned with the proven GeaconPolaris configuration.
+    - name: zmk-driver-iqs9151-upstream
+      url: https://github.com/ShiniNet/zmk-driver-iqs9151
+      revision: 08a6fd19c5aa5ae7f11daf371b5a391cd8596783
+      path: modules/zmk-driver-iqs9151-upstream
 
     # DYA Studio V2 runtime configuration and diagnostics.
     - name: zmk-module-runtime-input-processor

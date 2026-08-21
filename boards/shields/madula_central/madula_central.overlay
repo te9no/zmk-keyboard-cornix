@@ -42,7 +42,7 @@
             <&gpio1 11 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
     };
 
-    /* QL5 is a high-side P-MOSFET, so LED_EN_L is active low. */
+    /* Madula QL5 is a high-side P-MOSFET, so LED_EN_L is active low. */
     madula_led_power: EXT_POWER {
         compatible = "zmk,ext-power-generic";
         control-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;

@@ -1,10 +1,10 @@
 # Copyright (c) 2026
 # SPDX-License-Identifier: MIT
 
-if SHIELD_CORNIX_MADULA_CENTRAL
+if SHIELD_MADULA_CENTRAL
 
 config ZMK_KEYBOARD_NAME
-    default "Cornix Madula"
+    default "Madula"
 
 config ZMK_SPLIT
     default y
@@ -49,4 +49,4 @@ config ADC_NRFX_SAADC
 config GPIO
     default y
 
-endif # SHIELD_CORNIX_MADULA_CENTRAL
+endif # SHIELD_MADULA_CENTRAL

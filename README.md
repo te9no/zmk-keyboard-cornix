@@ -10,16 +10,17 @@ Central（XIAO BLE）──┤
                      └─ cornix_right（Peripheral）
 ```
 
-## Cornix Madula — 外部感覚器をつなぐ「人工髄」
+## Madula — 外部感覚器をつなぐ「人工髄」
 
 Madulaは、Cornixに外部感覚器を接続するための「人工髄」です。
 
 TrackPoint、Trackball、Analog Stickなど、性質の異なる入力器官を受け入れ、その操作信号をCornix本体とホストへ中継する中枢インターフェースとして設計されています。キーボードを単なるキー入力装置ではなく、用途に応じて感覚器を交換・拡張できる身体として扱うための接続点です。
 
-現時点でファームウェアが対応しているMeKaBuモジュールは次の2種類です。
+現時点でファームウェアが対応しているMeKaBuモジュールは次の3種類です。
 
 - PMW3610 Trackball
 - ADS1220 LPPS TrackPoint
+- Azoteq IQS9151 Trackpad
 
 Analog StickなどはMadulaの拡張コンセプトに含まれますが、対応snippetは今後追加する必要があります。
 
@@ -31,8 +32,9 @@ Analog StickなどはMadulaの拡張コンセプトに含まれますが、対�
 
 | ターゲット | 書き込み先 | 用途 |
 | --- | --- | --- |
-| `cornix_madula_trackball` | Madula Central | PMW3610 Trackball |
-| `cornix_madula_trackpoint` | Madula Central | ADS1220 LPPS TrackPoint |
+| `madula_trackball` | Madula Central | PMW3610 Trackball |
+| `madula_trackpoint` | Madula Central | ADS1220 LPPS TrackPoint |
+| `madula_iqs` | Madula Central | Azoteq IQS9151 Trackpad |
 | `cornix_tps43_production` | Cornix TP Central | TPS43・DYA Studio・内蔵RGBステータスLED |
 | `cornix_left_production` | Cornix左 | 外部Central構成用Peripheral |
 | `cornix_right_production` | Cornix右 | 外部Central構成用Peripheral |
@@ -66,7 +68,7 @@ MadulaまたはTPS43のCentralファームウェアを1つ選び、左右のProd
 ### Madula + Trackball
 
 ```bash
-./just.sh build cornix_madula_trackball
+./just.sh build madula_trackball
 ./just.sh build cornix_left_production
 ./just.sh build cornix_right_production
 ```
@@ -74,7 +76,15 @@ MadulaまたはTPS43のCentralファームウェアを1つ選び、左右のProd
 ### Madula + TrackPoint
 
 ```bash
-./just.sh build cornix_madula_trackpoint
+./just.sh build madula_trackpoint
+./just.sh build cornix_left_production
+./just.sh build cornix_right_production
+```
+
+### Madula + IQS Trackpad
+
+```bash
+./just.sh build madula_iqs
 ./just.sh build cornix_left_production
 ./just.sh build cornix_right_production
 ```
@@ -110,20 +120,20 @@ firmware/zmk-keyboard-cornix/<ブランチ名>/
 
 ## Madula Centralのハードウェア
 
-`cornix_madula_central`は、XIAO BLEを搭載したMadulaをCornixのSplit Centralとして動作させるシールドです。J4へ接続するMeKaBuモジュールに合わせ、Trackball用またはTrackPoint用snippetを選択します。
+`madula_central`は、XIAO BLEを搭載したMadulaをCornixのSplit Centralとして動作させるシールドです。J4へ接続するMeKaBuモジュールに合わせ、Trackball、TrackPoint、IQS Trackpad用snippetのいずれかを選択します。
 
 ### J4モジュール端子
 
-| J4 | 信号 | XIAO BLE GPIO | PMW3610 | ADS1220 LPPS |
-| --- | --- | --- | --- | --- |
-| 1 | NCS | P1.12 / D7 | CS | CS |
-| 2 | SCLK | P1.13 / D8 | SCLK | SCLK |
-| 3 | MOTION | P1.14 / D9 | Motion IRQ | MISO |
-| 4 | SDIO | P1.15 / D10 | MOSI/MISO共用 | MOSI |
-| 5 | 3V3 | — | 3.3 V | 3.3 V |
-| 6 | GND | — | GND | GND |
+| J4 | 信号 | XIAO BLE GPIO | PMW3610 | ADS1220 LPPS | IQS9151 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | NCS | P1.12 / D7 | CS | CS | IRQ |
+| 2 | SCLK | P1.13 / D8 | SCLK | SCLK | I²C SCL |
+| 3 | MOTION | P1.14 / D9 | Motion IRQ | MISO | 未使用 |
+| 4 | SDIO | P1.15 / D10 | MOSI/MISO共用 | MOSI | I²C SDA |
+| 5 | 3V3 | — | 3.3 V | 3.3 V | 3.3 V |
+| 6 | GND | — | GND | GND | GND |
 
-PMW3610では半二重SPIとしてP1.15をMOSI/MISOで共用します。ADS1220 LPPSではP1.14をMISO、P1.15をMOSIとして使用します。
+PMW3610では半二重SPIとしてP1.15をMOSI/MISOで共用します。ADS1220 LPPSではP1.14をMISO、P1.15をMOSIとして使用します。IQS9151は400 kHz I²C、アドレス`0x56`で動作し、P1.12をActive LowのIRQとして使用します。ジェスチャーとフィルターの初期値はGeaconPolarisの実装を基準にしています。
 
 ### Direct GPIOキー
 
@@ -235,12 +245,12 @@ Cornix PCBはEbyte E73-2G4M08S1C（nRF52840）を使用します。
 
 | ID | 機能 |
 | --- | --- |
-| `cornix_madula_central` | MeKaBu Trackball／TrackPoint対応Central |
+| `madula_central` | MeKaBu Trackball／TrackPoint／IQS Trackpad対応Central |
 | `cornix_tps43_central` | TPS43 Trackpad・DYA Studio対応Central |
 
 ## キーマップ
 
-標準キーマップは[`config/cornix.keymap`](config/cornix.keymap)です。Madulaの3つのDirect GPIOキーは、既存のCornix 50位置の後ろへ追加されています。
+Madulaの入口キーマップは[`config/madula.keymap`](config/madula.keymap)です。共通の[`config/cornix.keymap`](config/cornix.keymap)を読み込み、3つのDirect GPIOキーを既存のCornix 50位置の後ろへ追加します。
 
 キーマップ変更後は対象となるCentralと左右Peripheralを再ビルドしてください。
 
@@ -256,6 +266,7 @@ Cornixの旧RMKファームウェアはSoftDeviceを使用しないFlash配置�
 boards/jzf/cornix/                 Cornix左右のボード定義
 boards/shields/                    Madula・TPS43 Centralシールド
 config/cornix.keymap               共通キーマップ
+config/madula.keymap               Madula用キーマップ入口
 config/west.yml                    ZMKと追加モジュールの依存関係
 snippets/                          入力器官・復旧・LED設定
 src/                               このリポジトリ固有のZMK拡張

@@ -1,4 +1,0 @@
-name: cornix-madula-trackpoint
-append:
-  EXTRA_CONF_FILE: cornix-madula-trackpoint.conf
-  EXTRA_DTC_OVERLAY_FILE: cornix-madula-trackpoint.overlay

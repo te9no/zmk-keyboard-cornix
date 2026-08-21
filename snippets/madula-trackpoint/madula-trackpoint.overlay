@@ -1,3 +1,4 @@
+/* MeKaBu ADS1220 LPPS input organ for Madula. */
 #include <dt-bindings/gpio/gpio.h>
 #include <zephyr/dt-bindings/input/input-event-codes.h>
 
