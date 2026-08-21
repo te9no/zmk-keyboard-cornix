@@ -26,7 +26,7 @@ manifest:
         file: app/west.yml
     - name: zmk-helpers
       remote: urob
-      revision: main
+      revision: 95edb8f15ef1d1bd8332810555f8cf5837fbdd27
       clone-depth: 1
     - name: zmk-layout-shift
       revision: 0f2fad97b32332e1832377aa8afd1ec213829190
@@ -37,7 +37,7 @@ manifest:
       revision: 6ac6efe7e0902ccef4ef3893ab0054535e727566
     - name: zmk-driver-azoteq-iqs5xx
       remote: AYM1607
-      revision: main
+      revision: 27321f0232b50f0af31eb27ff97d539933467ea4
       clone-depth: 1
 
     # Pointing-device drivers used by the interchangeable MeKaBu modules on
