@@ -1,0 +1,3 @@
+name: madula-dya-trackball
+append:
+  EXTRA_DTC_OVERLAY_FILE: madula-dya-trackball.overlay

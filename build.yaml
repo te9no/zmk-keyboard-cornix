@@ -5,7 +5,7 @@ include:
   # listed below; flash only one central variant at a time.
   - board: xiao_ble
     shield: madula_central
-    snippet: madula-trackball zmk-usb-logging cornix-cdc-boot cornix-production-cdc
+    snippet: madula-trackball madula-dya-trackball studio-rpc-usb-uart zmk-usb-logging cornix-cdc-boot cornix-production-cdc madula-dya-studio-v2
     artifact-name: madula_trackball
 
   - board: xiao_ble

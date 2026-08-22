@@ -53,6 +53,11 @@ manifest:
       revision: 08a6fd19c5aa5ae7f11daf371b5a391cd8596783
       path: modules/zmk-driver-iqs9151-upstream
 
+    # PMW3610 driver with runtime settings and DYA Studio diagnostics.
+    - name: zmk-driver-pmw3610-with-custom-studio-rpc
+      remote: cormoran
+      revision: 5c34ea0eec246a1c986111417cd779b53144629a
+
     # DYA Studio V2 runtime configuration and diagnostics.
     - name: zmk-module-runtime-input-processor
       revision: 72387b5212264d26d704dbc43c765f6485470a77

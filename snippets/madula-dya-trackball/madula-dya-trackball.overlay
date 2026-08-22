@@ -1,0 +1,10 @@
+#include <dt-bindings/zmk/input_transform.h>
+#include <input/processors.dtsi>
+#include <input/processors/runtime-input-processor.dtsi>
+
+/* Preserve the MeKaBu mounting transform and expose cursor tuning to DYA Studio. */
+&madula_trackball_listener {
+    input-processors =
+        <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>,
+        <&mouse_runtime_input_processor>;
+};
