@@ -6,3 +6,12 @@
         cdc-port = <&snippet_zmk_usb_logging_uart>;
     };
 };
+
+/*
+ * Keep the dedicated USB logging/CDC boot and Studio RPC CDC instances.
+ * A third, unused board CDC function exhausts the nRF52840 USB endpoint
+ * budget and can leave Studio enumerable but unable to receive RPC data.
+ */
+&board_cdc_acm_uart {
+    status = "disabled";
+};
