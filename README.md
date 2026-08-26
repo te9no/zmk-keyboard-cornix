@@ -73,6 +73,14 @@ MadulaまたはTPS43のCentralファームウェアを1つ選び、左右のProd
 ./just.sh build cornix_right_production
 ```
 
+PMW3610の起動状態やレジスタをCDCへ定期出力する診断版が必要な場合だけ、
+`madula-pmw-debug` snippetを追加します。通常のTrackballファームウェアでは
+この周期ログは無効です。
+
+```bash
+./just.sh build madula_trackball -p always -S madula-pmw-debug
+```
+
 ### Madula + TrackPoint
 
 ```bash

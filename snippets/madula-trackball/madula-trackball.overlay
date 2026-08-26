@@ -4,51 +4,41 @@
 #include <zephyr/dt-bindings/input/input-event-codes.h>
 #include <input/processors.dtsi>
 
-&pinctrl {
-    madula_tb_spi_default: madula_tb_spi_default {
-        group1 {
-            psels = <NRF_PSEL(SPIM_SCK,  1, 13)>,
-                    <NRF_PSEL(SPIM_MOSI, 1, 15)>,
-                    <NRF_PSEL(SPIM_MISO, 1, 15)>;
-        };
-    };
-
-    madula_tb_spi_sleep: madula_tb_spi_sleep {
-        group1 {
-            psels = <NRF_PSEL(SPIM_SCK,  1, 13)>,
-                    <NRF_PSEL(SPIM_MOSI, 1, 15)>,
-                    <NRF_PSEL(SPIM_MISO, 1, 15)>;
-            low-power-enable;
-        };
-    };
-};
-
 / {
+    madula_tb_spi: spi-three-wire {
+        compatible = "te9no,spi-three-wire-gpio";
+        status = "okay";
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        sck-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
+        sdio-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
+        cs-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
+
+        turnaround-delay-us = <4>;
+        select-delay-us = <1>;
+        deselect-delay-us = <4>;
+        recovery-delay-us = <30>;
+
+        madula_trackball: trackball@0 {
+            status = "okay";
+            compatible = "cormoran,pmw3610";
+            reg = <0>;
+            spi-max-frequency = <1500000>;
+            irq-gpios = <&gpio1 14 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+            cpi = <800>;
+            evt-type = <INPUT_EV_REL>;
+            x-input-code = <INPUT_REL_X>;
+            y-input-code = <INPUT_REL_Y>;
+            force-awake;
+            disable-burst-read;
+            settings-id = "cornix-madula-tb";
+        };
+    };
+
     madula_trackball_listener: madula_trackball_listener {
         compatible = "zmk,input-listener";
         device = <&madula_trackball>;
         input-processors = <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>;
-    };
-};
-
-&spi0 {
-    status = "okay";
-    compatible = "nordic,nrf-spim";
-    pinctrl-0 = <&madula_tb_spi_default>;
-    pinctrl-1 = <&madula_tb_spi_sleep>;
-    pinctrl-names = "default", "sleep";
-    cs-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
-
-    madula_trackball: trackball@0 {
-        status = "okay";
-        compatible = "pixart,pmw3610";
-        reg = <0>;
-        spi-max-frequency = <2000000>;
-        motion-gpios = <&gpio1 14 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-        res-cpi = <800>;
-        zephyr,axis-x = <INPUT_REL_X>;
-        zephyr,axis-y = <INPUT_REL_Y>;
-        invert-y;
-        smart-mode;
     };
 };

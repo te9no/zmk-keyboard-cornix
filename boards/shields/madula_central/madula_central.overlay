@@ -14,13 +14,6 @@
         status-ws2812 = &madula_led_strip;
     };
 
-    vbatt: vbatt {
-        compatible = "zmk,battery-voltage-divider";
-        io-channels = <&adc 0>;
-        output-ohms = <1000000>;
-        full-ohms = <1000000>;
-    };
-
     /*
      * SW3/SW4/SW5 are wired independently to S1/S2/S3. The composite row
      * offset places them after the 50 Cornix positions (50, 51, 52).
@@ -99,4 +92,34 @@
 
 &adc {
     status = "okay";
+};
+
+/*
+ * The ZMK XIAO BLE board variant defines vbatt for the carrier board's
+ * divider. Madula has its own divider on A0, so retain Madula's electrical
+ * values while reusing the board-provided node label.
+ */
+&vbatt {
+    io-channels = <&adc 0>;
+    /delete-property/ power-gpios;
+    output-ohms = <1000000>;
+    full-ohms = <1000000>;
+};
+
+/*
+ * XIAO connector defaults occupy every Madula J4 signal: UART TX uses P1.12,
+ * while SPI2 uses P1.13/P1.14/P1.15. I2C1 also claims connector pins used by
+ * Madula's direct keys. Module snippets enable only their dedicated spi0 or
+ * i2c0 controller when required.
+ */
+&xiao_serial {
+    status = "disabled";
+};
+
+&xiao_spi {
+    status = "disabled";
+};
+
+&xiao_i2c {
+    status = "disabled";
 };

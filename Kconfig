@@ -14,6 +14,11 @@ config CORNIX_BLE_LINK_MONITOR
     bool "Log only BLE link state transitions"
     depends on BT
 
+config CORNIX_PMW3610_DIAGNOSTICS
+    bool "Periodically log PMW3610 startup and bus diagnostics"
+    depends on PMW3610
+    depends on GPIO
+
 config CORNIX_HOST_BOND_RESET
     bool "Clear Central host profiles while preserving split peripheral bonds"
     depends on ZMK_BLE

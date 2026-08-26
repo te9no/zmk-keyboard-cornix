@@ -11,13 +11,6 @@
         zmk,physical-layout = &layout_50;
     };
 
-    vbatt: vbatt {
-        compatible = "zmk,battery-voltage-divider";
-        io-channels = <&adc 0>;
-        output-ohms = <1000000>;
-        full-ohms = <1000000>;
-    };
-
     tps43_input: tps43_input {
         compatible = "zmk,input-listener";
         device = <&tps43>;
@@ -52,6 +45,31 @@
 
 &adc {
     status = "okay";
+};
+
+/* Cornix has its own A0 divider; override the XIAO ZMK board default. */
+&vbatt {
+    io-channels = <&adc 0>;
+    /delete-property/ power-gpios;
+    output-ohms = <1000000>;
+    full-ohms = <1000000>;
+};
+
+/*
+ * The TPS43 shield owns the relevant connector pins through i2c0 and its
+ * GPIOs. Disable the unused XIAO defaults so they cannot reserve the same
+ * pins before the shield is initialized.
+ */
+&xiao_serial {
+    status = "disabled";
+};
+
+&xiao_spi {
+    status = "disabled";
+};
+
+&xiao_i2c {
+    status = "disabled";
 };
 
 &i2c0 {

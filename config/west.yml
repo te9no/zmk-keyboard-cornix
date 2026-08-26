@@ -20,8 +20,8 @@ manifest:
       url-base: https://github.com/cormoran
   projects:
     - name: zmk
-      remote: te9no
-      revision: afe241df80b05c3f4e0cc95ada7584d24422a893
+      remote: cormoran
+      revision: e5c9b6915b56801193e359dd9bad4a167ce0d1b8
       import:
         file: app/west.yml
     - name: zmk-helpers
@@ -52,6 +52,15 @@ manifest:
       url: https://github.com/ShiniNet/zmk-driver-iqs9151
       revision: 08a6fd19c5aa5ae7f11daf371b5a391cd8596783
       path: modules/zmk-driver-iqs9151-upstream
+
+    # PMW3610 driver with runtime settings and DYA Studio diagnostics.
+    - name: zmk-driver-pmw3610-with-custom-studio-rpc
+      remote: cormoran
+      revision: 5c34ea0eec246a1c986111417cd779b53144629a
+    - name: zmk-driver-spi-three-wire
+      remote: te9no
+      revision: 4362133dbfbf66788b66b0a3e3c410b9232c06cb
+      path: modules/zmk-driver-spi-three-wire
 
     # DYA Studio V2 runtime configuration and diagnostics.
     - name: zmk-module-runtime-input-processor

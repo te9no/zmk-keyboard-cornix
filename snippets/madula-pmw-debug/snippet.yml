@@ -1,0 +1,3 @@
+name: madula-pmw-debug
+append:
+  EXTRA_CONF_FILE: madula-pmw-debug.conf
