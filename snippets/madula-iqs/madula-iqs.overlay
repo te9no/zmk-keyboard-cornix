@@ -5,7 +5,7 @@
 &pinctrl {
     madula_iqs_i2c_default: madula_iqs_i2c_default {
         group1 {
-            psels = <NRF_PSEL(TWIM_SDA, 1, 15)>,
+            psels = <NRF_PSEL(TWIM_SDA, 1, 14)>,
                     <NRF_PSEL(TWIM_SCL, 1, 13)>;
             bias-pull-up;
         };
@@ -13,7 +13,7 @@
 
     madula_iqs_i2c_sleep: madula_iqs_i2c_sleep {
         group1 {
-            psels = <NRF_PSEL(TWIM_SDA, 1, 15)>,
+            psels = <NRF_PSEL(TWIM_SDA, 1, 14)>,
                     <NRF_PSEL(TWIM_SCL, 1, 13)>;
             low-power-enable;
             bias-pull-up;
