@@ -30,7 +30,6 @@
         compatible = "analog-axis-hires";
         status = "okay";
         poll-period-downshift-ms = <8 5000 100>;
-        dominant-axis-lock;
 
         axis-x {
             status = "okay";
