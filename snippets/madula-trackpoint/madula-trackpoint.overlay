@@ -34,7 +34,7 @@
 
         axis-x {
             status = "okay";
-            io-channels = <&madula_ads1220 0>;
+            io-channels = <&madula_ads1220 1>;
             in-min = <(0 - 12000)>;
             in-max = <(0 + 12000)>;
             in-calib-cycle = <100>;
@@ -49,13 +49,14 @@
 
         axis-y {
             status = "okay";
-            io-channels = <&madula_ads1220 1>;
+            io-channels = <&madula_ads1220 0>;
             in-min = <(0 - 12000)>;
             in-max = <(0 + 12000)>;
             in-calib-cycle = <100>;
             in-deadzone = <600>;
             out-min = <(-20)>;
             out-max = <20>;
+            invert-output;
             skip-change-comparator;
             zephyr,axis-type = <INPUT_EV_REL>;
             zephyr,axis = <INPUT_REL_Y>;
