@@ -134,14 +134,17 @@ firmware/zmk-keyboard-cornix/<ブランチ名>/
 
 | J4 | 信号 | XIAO BLE GPIO | PMW3610 | ADS1220 LPPS | IQS9151 |
 | --- | --- | --- | --- | --- | --- |
-| 1 | NCS | P1.12 / D7 | CS | CS | IRQ |
-| 2 | SCLK | P1.13 / D8 | SCLK | SCLK | I²C SCL |
-| 3 | MOTION | P1.14 / D9 | Motion IRQ | MISO | 未使用 |
-| 4 | SDIO | P1.15 / D10 | MOSI/MISO共用 | MOSI | I²C SDA |
+| 1 | NCS | P1.12 / D7 | CS | MOSI | IRQ |
+| 2 | SCLK | P1.13 / D8 | SCLK | MISO | I²C SCL |
+| 3 | MOTION | P1.14 / D9 | Motion IRQ | DRDY | 未使用 |
+| 4 | SDIO | P1.15 / D10 | MOSI/MISO共用 | SCLK | I²C SDA |
 | 5 | 3V3 | — | 3.3 V | 3.3 V | 3.3 V |
 | 6 | GND | — | GND | GND | GND |
 
-PMW3610では半二重SPIとしてP1.15をMOSI/MISOで共用します。ADS1220 LPPSではP1.14をMISO、P1.15をMOSIとして使用します。IQS9151は400 kHz I²C、アドレス`0x56`で動作し、P1.12をActive LowのIRQとして使用します。ジェスチャーとフィルターの初期値はGeaconPolarisの実装を基準にしています。
+PMW3610では半二重SPIとしてP1.15をMOSI/MISOで共用します。ADS1220 LPPSではP1.12をMOSI、P1.13をMISO、P1.15をSCLKとして使用します。ADS1220のCSはモジュール内でGNDに固定され、DRDYはJ4.3へ配線されますが、起動時の不安定さを避けるためファームウェアはtimed pollingを使用します。IQS9151は400 kHz I²C、アドレス`0x56`で動作し、P1.12をActive LowのIRQとして使用します。ジェスチャーとフィルターの初期値はGeaconPolarisの実装を基準にしています。
+
+ADS1220 LPPSのカーソル座標は、装着向きに合わせてADC1を反転したREL_X、ADC0を反転したREL_Yへ割り当てます（`new=(-oldY, oldX)`）。
+両軸は独立して報告するため、斜め方向の入力も維持されます。
 
 ### Direct GPIOキー
 
