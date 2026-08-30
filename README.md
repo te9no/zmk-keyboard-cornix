@@ -119,6 +119,27 @@ firmware/zmk-keyboard-cornix/<ブランチ名>/
 
 ## 書き込みと初回接続
 
+### ビルド済みファームウェア
+
+通常使用向けのビルド済みファイルは
+[`firmware/zmk-keyboard-cornix/main/`](firmware/zmk-keyboard-cornix/main/)
+に格納します。Madulaは接続したモジュールに合わせて
+`madula_trackball.uf2`、`madula_trackpoint.uf2`（LPPS）、`madula_iqs.uf2`
+のいずれかを選び、Cornix左右には対応するProductionファームウェアを使用してください。
+`bond_reset`・`settings_reset` は復旧用であり、通常の更新には使用しません。
+
+GitHub Actionsのビルド対象を変更したpush、または手動実行で
+`commit_firmware`を有効にした場合、成果物を
+`firmware/zmk-keyboard-cornix/<ブランチ名>/`へ自動保存します。
+ブランチ名の`/`などは`-`に置き換えます。検証ブランチの成果物は
+`main/`とは分けて格納します。
+
+毎日の定期ビルドはビルド確認のみで、ファームウェアをコミットしません。
+[Actionsの実行結果](https://github.com/te9no/zmk-keyboard-cornix/actions/workflows/build.yml)
+から従来どおり成果物も取得できます。ビルド成功と実機検証の完了は別です。
+
+### 書き込み手順
+
 1. 対象デバイスをUF2ブートローダーモードにします。通常はResetを素早く2回押します。
 2. 表示されたUSBドライブへ、対応する`.uf2`ファイルをコピーします。
 3. 左右PeripheralとCentralの電源を入れ直します。
