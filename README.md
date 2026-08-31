@@ -32,9 +32,9 @@ Analog StickなどはMadulaの拡張コンセプトに含まれますが、対�
 
 | ターゲット | 書き込み先 | 用途 |
 | --- | --- | --- |
-| `madula_trackball` | Madula Central | PMW3610 Trackball |
-| `madula_trackpoint` | Madula Central | ADS1220 LPPS TrackPoint |
-| `madula_iqs` | Madula Central | Azoteq IQS9151 Trackpad |
+| `madula_trackball` | Madula Central | PMW3610 Trackball・DYA Studio・内蔵RGB＋SPI LED |
+| `madula_trackpoint` | Madula Central | ADS1220 LPPS TrackPoint・DYA Studio・内蔵RGB＋SPI LED |
+| `madula_iqs` | Madula Central | Azoteq IQS9151 Trackpad・DYA Studio・内蔵RGB＋SPI LED |
 | `cornix_tps43_production` | Cornix TP Central | TPS43・DYA Studio・内蔵RGBステータスLED |
 | `cornix_left_production` | Cornix左 | 外部Central構成用Peripheral |
 | `cornix_right_production` | Cornix右 | 外部Central構成用Peripheral |
@@ -185,8 +185,18 @@ SparAkashaAnantaの省電力実装を参考にしています。
 - LED電源制御: P0.03 / D1、Active Low
 - LED数: 1
 - バッテリー、接続、レイヤー表示でLED 0を共有
+- USBが選択中の接続表示はシアン（`CONFIG_RGBLED_WIDGET_CONN_SHOW_USB=y`）
+- レイヤー番号を白の点滅回数で表示（レイヤー1は1回、2は2回。Baseの0は点滅なし）
+- 点灯・消灯の間隔は各120 ms。最高レイヤーが変われば新しい番号へ切り替え、終了後は元の状態に戻す
+- 電池・接続表示など優先度の高い表示中はレイヤー番号の点滅を省略する
 - 15秒後にLED電源を自動OFF
 - バッテリー電圧: P0.02 / D0 / ADC0
+
+Madula全3種類で、XIAO内蔵RGB（GPIO LED）とこのWS2812（SPI3）を併用します。
+内蔵RGBは起動時の電池・接続状態とレイヤー色を示し、SPI LEDとは別に駆動します。
+既存のWS2812ドライバは固定時間の点滅なので、番号の回数はMadula専用の
+`CONFIG_MADULA_WS2812_LAYER_NUMBER`で補います。ドライバのLED共有・優先度APIを使い、
+既存の自動レイヤー表示は無効にして二重駆動を避けています。
 
 ## Cornix TP / TPS43 Central
 
@@ -243,6 +253,12 @@ I2Cアドレスは`0x74`、バス速度はFast modeです。
 ## DYA Studio V2
 
 `cornix_tps43_production`と`cornix_tps43_host_bond_reset`は、[DYA Studio](https://studio.dya.cormoran.works/)に対応しています。
+
+Madulaも`madula_trackball`・`madula_trackpoint`・`madula_iqs`の全3種類で、
+Studio USB接続、キーマップ、Combo/Macro、BLE管理と共通診断を有効にしています。
+PMW3610専用の設定・診断はTB版だけに追加します。LPPS/IQS版にPMWセンサーが
+表示されないのは正常です。ポインティング入力の動作確認と、各版のStudio/LEDの
+実機検証は別扱いです。今回追加したLPPS/IQSのStudio接続とLED併用は実機確認待ちです。
 
 TPS43 CentralをUSB接続し、ブラウザーからStudio用シリアルポートを選択してください。ZMKログ用ポートとは別のポートです。
 

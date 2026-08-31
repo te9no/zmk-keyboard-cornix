@@ -17,3 +17,7 @@ endif()
 if(CONFIG_CORNIX_CENTRAL_RGB_LED)
   target_sources(app PRIVATE src/central_rgb_led.c)
 endif()
+
+if(CONFIG_MADULA_WS2812_LAYER_NUMBER)
+  target_sources(app PRIVATE src/madula_layer_number.c)
+endif()

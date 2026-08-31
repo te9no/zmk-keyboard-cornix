@@ -24,6 +24,16 @@ config CORNIX_HOST_BOND_RESET
     depends on ZMK_BLE
     depends on ZMK_SPLIT_ROLE_CENTRAL
 
+config MADULA_WS2812_LAYER_NUMBER
+    bool "Blink the highest active layer number on Madula's shared SPI LED"
+    depends on SHIELD_MADULA_CENTRAL
+    depends on RGBLED_WIDGET && RGBLED_WIDGET_WS2812
+    depends on ZMK_SPLIT_ROLE_CENTRAL
+    help
+      Use the widget's priority/sharing API; never override a higher-priority
+      battery or connectivity indication. Layer 0 has no pulse. Other layers
+      blink their numeric index, then return the LED to its previous state.
+
 config CORNIX_CENTRAL_RGB_LED
     bool "Blink the active layer on the Central XIAO RGB LED"
     depends on GPIO
