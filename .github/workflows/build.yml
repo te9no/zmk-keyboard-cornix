@@ -20,6 +20,10 @@ on:
       - "config/**"
       - "boards/**"
       - "snippets/**"
+      - "src/**"
+      - "tests/**"
+      - "Kconfig"
+      - "CMakeLists.txt"
       - "build.yaml"
       - "zephyr/module.yml"
       - ".github/workflows/build.yml"
@@ -30,7 +34,15 @@ permissions:
   issues: write
 
 jobs:
+  host-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Check Madula configuration and LED pulse state machine
+        run: python3 -m unittest discover -s tests -v
+
   build:
+    needs: host-tests
     uses: te9no/zmk-workspace/.github/workflows/build-zmk-firmware.yml@main
     permissions:
       contents: write

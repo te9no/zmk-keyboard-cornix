@@ -1,3 +1,4 @@
 name: madula-dya-trackball
 append:
+  EXTRA_CONF_FILE: madula-dya-trackball.conf
   EXTRA_DTC_OVERLAY_FILE: madula-dya-trackball.overlay
