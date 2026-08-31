@@ -39,6 +39,8 @@
     madula_trackball_listener: madula_trackball_listener {
         compatible = "zmk,input-listener";
         device = <&madula_trackball>;
-        input-processors = <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>;
+        /* Madula mounting: up -> up, right -> right (swap, then invert both). */
+        input-processors = <&zip_xy_transform
+            (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>;
     };
 };
