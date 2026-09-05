@@ -24,7 +24,7 @@ svg.physical-layout { font-family: ui-monospace, SFMono-Regular, Consolas, monos
 <title>LAYOUT_50</title>
 <g class="layer layer-base" transform="translate(0 0)">
 <text class="title" x="30" y="10">base</text>
-<text class="subtitle" x="30" y="28">53 bindings</text>
+<text class="subtitle" x="30" y="28">50 bindings</text>
 <g class="key keypos-0 " transform="translate(30 90) rotate(0 0 -26)">
 <rect x="0" y="0" width="52" height="52" rx="6" ry="6"/>
 <text class="tap" x="26" y="26">TAB</text>
@@ -76,7 +76,7 @@ svg.physical-layout { font-family: ui-monospace, SFMono-Regular, Consolas, monos
 <g class="key keypos-12 " transform="translate(30 142) rotate(0 0 -78)">
 <rect x="0" y="0" width="52" height="52" rx="6" ry="6"/>
 <text class="tap" x="26" y="20">ESC</text>
-<text class="hold" x="26" y="37">LT 4</text>
+<text class="hold" x="26" y="37">LT 3</text>
 </g>
 <g class="key keypos-13 " transform="translate(82 142) rotate(0 -52 -78)">
 <rect x="0" y="0" width="52" height="52" rx="6" ry="6"/>
@@ -194,12 +194,12 @@ svg.physical-layout { font-family: ui-monospace, SFMono-Regular, Consolas, monos
 <g class="key keypos-41 " transform="translate(212 252.76) rotate(0 -182 -188.76)">
 <rect x="0" y="0" width="52" height="52" rx="6" ry="6"/>
 <text class="tap" x="26" y="20">SPC</text>
-<text class="hold" x="26" y="37">LT 2</text>
+<text class="hold" x="26" y="37">LT 1</text>
 </g>
 <g class="key keypos-42 " transform="translate(264 256.4) rotate(11.93 26 54.6)">
 <rect x="0" y="0" width="52" height="52" rx="6" ry="6"/>
 <text class="tap" x="26" y="20">SPC</text>
-<text class="hold" x="26" y="37">LT 3</text>
+<text class="hold" x="26" y="37">LT 2</text>
 </g>
 <g class="key keypos-43 " transform="translate(316 253.8) rotate(23 -26 57.2)">
 <rect x="0" y="0" width="52" height="52" rx="6" ry="6"/>
@@ -232,7 +232,7 @@ svg.physical-layout { font-family: ui-monospace, SFMono-Regular, Consolas, monos
 </g>
 <g class="layer layer-func" transform="translate(0 408.69)">
 <text class="title" x="30" y="10">func</text>
-<text class="subtitle" x="30" y="28">53 bindings</text>
+<text class="subtitle" x="30" y="28">50 bindings</text>
 <g class="key keypos-0 transparent" transform="translate(30 90) rotate(0 0 -26)">
 <rect x="0" y="0" width="52" height="52" rx="6" ry="6"/>
 <text class="tap" x="26" y="26">TRANS</text>
@@ -436,7 +436,7 @@ svg.physical-layout { font-family: ui-monospace, SFMono-Regular, Consolas, monos
 </g>
 <g class="layer layer-num" transform="translate(0 817.381)">
 <text class="title" x="30" y="10">num</text>
-<text class="subtitle" x="30" y="28">53 bindings</text>
+<text class="subtitle" x="30" y="28">50 bindings</text>
 <g class="key keypos-0 " transform="translate(30 90) rotate(0 0 -26)">
 <rect x="0" y="0" width="52" height="52" rx="6" ry="6"/>
 <text class="tap" x="26" y="20">BT_CLR</text>
@@ -641,7 +641,7 @@ svg.physical-layout { font-family: ui-monospace, SFMono-Regular, Consolas, monos
 </g>
 <g class="layer layer-bt" transform="translate(0 1226.071)">
 <text class="title" x="30" y="10">bt</text>
-<text class="subtitle" x="30" y="28">53 bindings</text>
+<text class="subtitle" x="30" y="28">50 bindings</text>
 <g class="key keypos-0 none" transform="translate(30 90) rotate(0 0 -26)">
 <rect x="0" y="0" width="52" height="52" rx="6" ry="6"/>
 <text class="tap" x="26" y="26">NONE</text>
@@ -849,7 +849,7 @@ svg.physical-layout { font-family: ui-monospace, SFMono-Regular, Consolas, monos
 </g>
 <g class="layer layer-navi" transform="translate(0 1634.762)">
 <text class="title" x="30" y="10">navi</text>
-<text class="subtitle" x="30" y="28">53 bindings</text>
+<text class="subtitle" x="30" y="28">50 bindings</text>
 <g class="key keypos-0 none" transform="translate(30 90) rotate(0 0 -26)">
 <rect x="0" y="0" width="52" height="52" rx="6" ry="6"/>
 <text class="tap" x="26" y="26">NONE</text>
