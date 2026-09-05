@@ -26,6 +26,12 @@
 
 &tog_ls { layout-maps = <&layout_shift_map_us_to_jis>; };
 
+/* Keep Layout Shift after Keymap Editor reorders standard includes. */
+&kp { compatible = "zmk,behavior-layout-shift-key-press"; };
+/* The driver implements one instance; route the optional mod-tap through it. */
+&kpls { status = "disabled"; };
+&mtls { bindings = <&kp>, <&kp>; };
+
 / {
     // Activate ADJUST layer by pressing raise and lower
 
