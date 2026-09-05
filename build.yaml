@@ -46,6 +46,13 @@ include:
     snippet: zmk-usb-logging cornix-cdc-boot cornix-production-cdc cornix-peripheral-led cornix-dya-peripheral cornix-settings-reset-once
     artifact-name: cornix_right_bond_reset
 
+  # Clear only the Central's saved split peripherals. Host profiles remain intact.
+  # This is a transitional image; flash the normal Madula image immediately after it.
+  - board: xiao_ble//zmk
+    shield: madula_central
+    snippet: zmk-usb-logging cornix-cdc-boot cornix-production-cdc cornix-split-bond-reset
+    artifact-name: madula_split_bond_reset
+
   # Full settings reset images
   - board: xiao_ble//zmk
     shield: settings_reset

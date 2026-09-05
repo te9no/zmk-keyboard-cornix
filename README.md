@@ -48,6 +48,15 @@ MadulaまたはTPS43のCentralファームウェアを1つ選び、左右のProd
 | `cornix_tps43_host_bond_reset` | TPS43 Centralのホスト情報を消去し、左右Peripheralのbondは維持 |
 | `cornix_left_bond_reset` | 左Peripheralの設定を一度だけ消去 |
 | `cornix_right_bond_reset` | 右Peripheralの設定を一度だけ消去 |
+| `madula_split_bond_reset` | Madula Centralで接続不能なPeripheral情報だけを消去し、接続中の片手とhost bondは維持 |
+
+片側Peripheralだけをbond resetすると、Central側に残った旧アドレス・旧鍵と不整合になる場合があります。
+正常な側の電源を入れた状態で`madula_split_bond_reset`をMadula Centralへ一度書き込み、
+12秒以上待ってから、続けて使用する
+`madula_trackball`、`madula_trackpoint`、`madula_iqs`のいずれかへ戻してください。
+その後、接続できなかった側だけに対応する`bond_reset`を一度書き込み、Productionへ戻します。
+復旧版は暗号化済みで接続中のPeripheralを保持するため、正常な側は原則として再設定不要です。
+`madula_split_bond_reset`は復旧専用であり、常用しません。
 
 ### 全設定リセット
 

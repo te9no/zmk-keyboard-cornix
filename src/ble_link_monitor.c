@@ -1,8 +1,6 @@
-#include <errno.h>
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/addr.h>
 #include <zephyr/bluetooth/conn.h>
-#include <zephyr/bluetooth/hci.h>
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
 
@@ -10,72 +8,13 @@
 #include <zmk/ble.h>
 #endif
 
-#if !IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
-#include <zmk/split/bluetooth/uuid.h>
-#endif
-
 LOG_MODULE_REGISTER(cornix_ble_link, LOG_LEVEL_INF);
-
-#if !IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
-
-static const struct bt_data recovery_ad[] = {
-    BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
-    BT_DATA_BYTES(BT_DATA_UUID16_SOME, 0x0f, 0x18),
-    BT_DATA_BYTES(BT_DATA_UUID128_ALL, ZMK_SPLIT_BT_SERVICE_UUID),
-};
-
-static void find_bond(const struct bt_bond_info *info, void *user_data) {
-    bt_addr_le_t *central = user_data;
-    if (bt_addr_le_cmp(&info->addr, BT_ADDR_LE_NONE) != 0) {
-        bt_addr_le_copy(central, &info->addr);
-    }
-}
-
-static void recover_advertising(struct k_work *work) {
-    bt_addr_le_t central = bt_addr_le_none;
-    bt_foreach_bond(BT_ID_DEFAULT, find_bond, &central);
-
-    int stop_err = bt_le_adv_stop();
-    if (stop_err < 0 && stop_err != -EALREADY) {
-        LOG_WRN("ADV recovery stop failed: %d", stop_err);
-    }
-
-    int err;
-    if (bt_addr_le_cmp(&central, BT_ADDR_LE_NONE) != 0) {
-        const struct bt_le_adv_param param = *BT_LE_ADV_CONN_DIR_LOW_DUTY(&central);
-        err = bt_le_adv_start(&param, NULL, 0, NULL, 0);
-    } else {
-        err = bt_le_adv_start(BT_LE_ADV_CONN_FAST_2, recovery_ad, ARRAY_SIZE(recovery_ad), NULL, 0);
-    }
-
-    if (err == -EALREADY) {
-        LOG_WRN("ADV recovery still busy; retrying");
-        k_work_reschedule(k_work_delayable_from_work(work), K_MSEC(500));
-    } else if (err < 0) {
-        LOG_ERR("ADV recovery failed: %d", err);
-        k_work_reschedule(k_work_delayable_from_work(work), K_SECONDS(1));
-    } else {
-        LOG_INF("ADV recovery started");
-    }
-}
-
-K_WORK_DELAYABLE_DEFINE(advertising_recovery_work, recover_advertising);
-
-#endif
 
 static void link_connected(struct bt_conn *conn, uint8_t err) {
     char addr[BT_ADDR_LE_STR_LEN];
     bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
     LOG_INF("LINK connected peer=%s err=0x%02x", addr, err);
 
-#if !IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
-    if (err == 0) {
-        k_work_cancel_delayable(&advertising_recovery_work);
-    } else if (err == BT_HCI_ERR_ADV_TIMEOUT) {
-        LOG_WRN("Directed advertising timed out; scheduling recovery");
-        k_work_reschedule(&advertising_recovery_work, K_MSEC(500));
-    }
-#endif
 }
 
 static void link_disconnected(struct bt_conn *conn, uint8_t reason) {

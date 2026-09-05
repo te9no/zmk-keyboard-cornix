@@ -14,6 +14,10 @@ if(CONFIG_CORNIX_HOST_BOND_RESET)
   target_sources(app PRIVATE src/central_host_bond_reset.c)
 endif()
 
+if(CONFIG_CORNIX_SPLIT_BOND_RESET)
+  target_sources(app PRIVATE src/split_bond_reset.c)
+endif()
+
 if(CONFIG_CORNIX_CENTRAL_RGB_LED)
   target_sources(app PRIVATE src/central_rgb_led.c)
 endif()

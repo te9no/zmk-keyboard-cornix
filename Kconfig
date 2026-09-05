@@ -24,6 +24,21 @@ config CORNIX_HOST_BOND_RESET
     depends on ZMK_BLE
     depends on ZMK_SPLIT_ROLE_CENTRAL
 
+config CORNIX_SPLIT_BOND_RESET
+    bool "Clear disconnected split peripheral bonds while preserving active splits and hosts"
+    depends on ZMK_BLE
+    depends on ZMK_SPLIT_ROLE_CENTRAL
+    depends on SETTINGS
+
+if CORNIX_SPLIT_BOND_RESET
+
+config CORNIX_SPLIT_BOND_RESET_DELAY_MS
+    int "Delay before checking split peripheral connections"
+    range 1000 30000
+    default 10000
+
+endif
+
 config MADULA_WS2812_LAYER_NUMBER
     bool "Blink the highest active layer number on Madula's shared SPI LED"
     depends on SHIELD_MADULA_CENTRAL
