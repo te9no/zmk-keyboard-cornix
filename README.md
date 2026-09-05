@@ -48,23 +48,33 @@ MadulaまたはTPS43のCentralファームウェアを1つ選び、左右のProd
 | `cornix_tps43_host_bond_reset` | TPS43 Centralのホスト情報を消去し、左右Peripheralのbondは維持 |
 | `cornix_left_bond_reset` | 左Peripheralの設定を一度だけ消去 |
 | `cornix_right_bond_reset` | 右Peripheralの設定を一度だけ消去 |
-| `madula_split_bond_reset` | Madula Centralで接続不能なPeripheral情報だけを消去し、接続中の片手とhost bondは維持 |
+| `madula_split_bond_reset` | Madula Centralの左右Peripheral情報を両方消去し、host bondは維持 |
 
-片側Peripheralだけをbond resetすると、Central側に残った旧アドレス・旧鍵と不整合になる場合があります。
-正常な側の電源を入れた状態で`madula_split_bond_reset`をMadula Centralへ一度書き込み、
-12秒以上待ってから、続けて使用する
-`madula_trackball`、`madula_trackpoint`、`madula_iqs`のいずれかへ戻してください。
-その後、接続できなかった側だけに対応する`bond_reset`を一度書き込み、Productionへ戻します。
-復旧版は暗号化済みで接続中のPeripheralを保持するため、正常な側は原則として再設定不要です。
-`madula_split_bond_reset`は復旧専用であり、常用しません。
+片側だけを初期化するとCentral側の旧アドレス・旧鍵と不整合になり、左右が
+排他的に接続することがあります。復旧時は左右を1組として扱います。
+
+1. 左右Peripheralの電源を切ります。
+2. Centralへ`madula_split_bond_reset`を書き込み、6秒以上待ちます。
+3. Centralを通常のMadulaファームへ戻します。
+4. 左へ`cornix_left_bond_reset`、右へ`cornix_right_bond_reset`をそれぞれ一度書き込みます。
+5. 左右をProductionファームへ戻し、Centralと左右を同時に起動します。
+
+`madula_split_bond_reset`は左右のsplit bondだけを消去し、PC等のhost bondは保持します。
+すべて復旧専用であり、常用しません。
 
 ### 全設定リセット
 
 | ターゲット | 書き込み先 |
 | --- | --- |
+| `madula_factory_settings_reset` | Madula XIAO Central（他機種ファーム誤書き込み後の深い復旧） |
 | `cornix_tps43_settings_reset` | XIAO BLE Central |
 | `cornix_left_settings_reset` | Cornix左 |
 | `cornix_right_settings_reset` | Cornix右 |
+
+他機種用ファームをMadula Centralへ誤って書き込んだ場合は、保存領域の用途が
+変わっている可能性があるため、host bondを保持できる保証がありません。
+SoftDeviceを復旧した後、`madula_factory_settings_reset`を一度書き込み、通常の
+Madulaファームへ戻してから、左右Peripheralも上記手順で再登録してください。
 
 ## `just.sh`でビルドする
 
