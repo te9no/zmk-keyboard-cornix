@@ -28,6 +28,15 @@
 
 &tog_ls { layout-maps = <&layout_shift_map_us_to_jis>; };
 
+/* Keymap Editor may reorder includes. Restore the override after all includes. */
+&kp {
+    compatible = "zmk,behavior-layout-shift-key-press";
+};
+
+/* The module instantiates one layout-shift key press device. Use kp everywhere. */
+&kpls { status = "disabled"; };
+&mtls { bindings = <&kp>, <&kp>; };
+
 / {
     behaviors {
         rsr_left: rsr_left {

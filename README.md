@@ -186,6 +186,13 @@ PMW3610では半二重SPIとしてP1.15をMOSI/MISOで共用します。ADS1220 
 ADS1220 LPPSのカーソル座標は、装着向きに合わせてADC1を反転したREL_X、ADC0を反転したREL_Yへ割り当てます（`new=(-oldY, oldX)`）。
 両軸は独立して報告するため、斜め方向の入力も維持されます。
 
+### MadulaのLayout Shift
+
+NUMレイヤー（2）の `&tog_ls` でUS/JIS変換を切り替えます。
+`madula.keymap` のinclude後にある `&kp` のcompatible指定は、Keymap Editorがinclude順序を変更しても
+Layout Shiftを維持するために必要です。モジュールが生成するキー入力デバイスは1つのため、
+`kpls` は無効化し、Layout Shift用Mod-Tap (`mtls`) も `kp` を参照させています。
+
 ### Madulaのスクロール操作
 
 右手エンコーダの初期割り当ては、時計回りが上スクロール、反時計回りが下スクロールです。
