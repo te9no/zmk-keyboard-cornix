@@ -42,5 +42,16 @@
         /* Madula mounting: up -> up, right -> right (swap, then invert both). */
         input-processors = <&zip_xy_transform
             (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>;
+
+        /* Layer overrides replace the base chain: retain the mounting transform. */
+        scroll_layer {
+            layers = <1>;
+            input-processors =
+                <&zip_xy_transform
+                    (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+                <&zip_xy_scaler 1 20>,
+                <&zip_xy_to_scroll_mapper>,
+                <&zip_scroll_transform INPUT_TRANSFORM_Y_INVERT>;
+        };
     };
 };

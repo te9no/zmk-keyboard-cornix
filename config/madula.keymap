@@ -42,8 +42,8 @@
             compatible = "zmk,behavior-runtime-sensor-rotate";
             #sensor-binding-cells = <0>;
             tap-ms = <5>;
-            cw-binding = <&kp PG_UP>;
-            ccw-binding = <&kp PG_DN>;
+            cw-binding = <&msc SCRL_UP>;
+            ccw-binding = <&msc SCRL_DOWN>;
         };
     };
 

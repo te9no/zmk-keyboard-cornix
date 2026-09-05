@@ -1,5 +1,7 @@
 /* MeKaBu ADS1220 LPPS input organ for Madula. */
 #include <zephyr/dt-bindings/input/input-event-codes.h>
+#include <dt-bindings/zmk/input_transform.h>
+#include <input/processors.dtsi>
 
 &pinctrl {
     madula_tp_spi_default: madula_tp_spi_default {
@@ -24,6 +26,15 @@
     madula_trackpoint_listener: madula_trackpoint_listener {
         compatible = "zmk,input-listener";
         device = <&madula_trackpoint>;
+
+        /* Axis mounting corrections are already applied by the sensor driver. */
+        scroll_layer {
+            layers = <1>;
+            input-processors =
+                <&zip_xy_scaler 1 10>,
+                <&zip_xy_to_scroll_mapper>,
+                <&zip_scroll_transform INPUT_TRANSFORM_Y_INVERT>;
+        };
     };
 
     madula_trackpoint: analog_axis_hires_0 {
