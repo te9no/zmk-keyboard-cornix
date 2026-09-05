@@ -275,6 +275,8 @@ I2Cアドレスは`0x74`、バス速度はFast modeです。
 
 Madulaも`madula_trackball`・`madula_trackpoint`・`madula_iqs`の全3種類で、
 Studio USB接続、キーマップ、Combo/Macro、BLE管理と共通診断を有効にしています。
+Madula本体のSW3・SW4・SW5も、物理レイアウト末尾の位置50・51・52として
+DYA Studioのキーマップ編集対象に含まれます。
 PMW3610専用の設定・診断はTB版だけに追加します。LPPS/IQS版にPMWセンサーが
 表示されないのは正常です。ポインティング入力の動作確認と、各版のStudio/LEDの
 実機検証は別扱いです。今回追加したLPPS/IQSのStudio接続とLED併用は実機確認待ちです。

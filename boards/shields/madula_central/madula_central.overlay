@@ -6,8 +6,26 @@
 / {
     chosen {
         zmk,battery = &vbatt;
-        zmk,physical-layout = &layout_50;
+        zmk,physical-layout = &madula_layout_53;
         zmk,kscan = &madula_kscan;
+    };
+
+    /*
+     * DYA Studio uses the chosen physical layout to enumerate editable keys.
+     * Reuse the 50 split positions and expose SW3/SW4/SW5 as positions
+     * 50/51/52 in a separate row below the keyboard.
+     */
+    madula_layout_53: madula_layout_53 {
+        compatible = "zmk,physical-layout";
+        display-name = "Madula 53-key";
+        transform = <&default_transform>;
+
+        keys =
+#include "../../jzf/cornix/cornix-layout-50-keys.dtsi"
+            , <&key_physical_attrs 100 100  575  650 0 0 0>
+            , <&key_physical_attrs 100 100  675  650 0 0 0>
+            , <&key_physical_attrs 100 100  775  650 0 0 0>
+            ;
     };
 
     aliases {
