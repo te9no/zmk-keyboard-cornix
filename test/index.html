@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="description" content="CornixとMadulaがつながらないときに、状態と次にすることを確認できます。">
+  <title>Cornix / Madula つながるかチェック</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <header><div><p class="eyebrow">Cornix / Madula 接続サポート</p><h1>つながらないときは、ここで確認</h1><p>機器の記録を読み取って、次にすることをご案内します。</p></div><span class="privacy">記録は外部に送りません</span></header>
+  <section class="panel" aria-labelledby="input-title">
+    <div class="section-head"><h2 id="input-title">1. 機器をつないで調べる</h2><span id="source">まだ読み取っていません</span></div>
+    <ol class="start-steps"><li>左右のキーボードと、<strong>まとめ役の機器（MadulaまたはTPS43）</strong>の電源を入れます。</li><li>まとめ役の機器を、データ通信できるUSBケーブルでパソコンにつなぎます。</li><li>下のボタンを押し、表示された一覧から機器を選びます。<strong>15秒ほど待つ</strong>と結果が出ます。</li></ol>
+    <div class="controls"><button id="serial" class="primary">USBで調べる</button><button id="stop" disabled>読み取りを止める</button></div>
+    <p>読み取るだけなので、機器の設定は消えません。</p>
+    <details class="help"><summary>うまく読み取れないとき</summary><p>ChromeまたはEdgeでこのページを開いてください。機器が一覧に出ないときは、USBケーブルと電源を確認してください。</p><p>一覧に複数の候補がある場合、必要なのは記録を読むための接続先です。キーの設定に使う「Studio」の接続先とは別です。どれか分からなければ、ほかの機器を試さず、製作者やサポートに確認してください。</p><p>記録を読む別のアプリを開いている場合は、その読み取りを止めてから試してください。文字が出ないだけでは、故障とは判断できません。</p></details>
+    <details class="help"><summary>保存した記録で調べる・お試し画面を見る</summary>
+      <div class="controls"><label class="file-button">記録ファイルを開く<input id="file" type="file" accept=".log,.txt,text/plain"></label><button id="demo">結果の見本を見る</button><button id="auth-demo">つながらない例を見る</button></div>
+      <label for="log">記録をコピーしてある場合は、ここに貼り付けてください</label><textarea id="log" spellcheck="false" placeholder="機器から読み取った記録（ログ）を貼り付けます。自分で文章を書く必要はありません。"></textarea>
+      <div class="controls"><button id="analyze">この記録で調べる</button><button id="clear">画面の記録を消す</button></div>
+      <p class="hint">保存した記録から分かるのは、その記録を取ったときの状態です。</p>
+    </details>
+    <p id="message" role="status" aria-live="polite"></p>
+  </section>
+  <section aria-labelledby="results-title">
+    <h2 id="results-title">2. つながっているか確認する</h2>
+    <div class="connection-picture" role="group" aria-label="パソコン、まとめ役の機器、左右のキーボードの接続状況">
+      <div class="picture-node" id="picture-host"><svg class="device-icon" viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="9" width="48" height="33" rx="4"/><path d="M32 42v12M22 54h20"/></svg><h3>パソコン</h3><span class="connection-caption">Bluetoothでつなぐ相手</span><p id="picture-host-status" class="picture-status"></p></div>
+      <div class="picture-link" id="picture-host-link" aria-hidden="true"><span></span></div>
+      <div class="picture-node module-node"><svg class="device-icon" viewBox="0 0 64 64" aria-hidden="true"><rect x="17" y="10" width="30" height="44" rx="8"/><circle cx="32" cy="28" r="8"/><path d="M26 45h12M4 25h7M53 25h7"/></svg><h3>まとめ役</h3><span id="picture-model" class="connection-caption">Madula または TPS43</span><p id="picture-sensor-status" class="picture-status"></p></div>
+      <div class="picture-link" id="picture-keyboards-link" aria-hidden="true"><span></span></div>
+      <div class="picture-node" id="picture-keyboards"><div class="keyboard-pair"><div><svg class="device-icon" viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="14" width="52" height="36" rx="5"/><path d="M16 24h4m8 0h4m8 0h4M16 32h4m8 0h4m8 0h4M16 41h20"/></svg><span>左</span></div><div><svg class="device-icon" viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="14" width="52" height="36" rx="5"/><path d="M16 24h4m8 0h4m8 0h4M16 32h4m8 0h4m8 0h4M28 41h20"/></svg><span>右</span></div></div><h3>キーボード</h3><span class="connection-caption">左右をまとめて確認</span><p id="picture-keyboards-status" class="picture-status"></p></div>
+    </div>
+    <p class="picture-legend">✓ 接続の記録あり　△ 動作を試してください　！確認が必要　？ まだ分かりません</p>
+    <p id="next-action" class="next-action" role="status"></p>
+    <div class="controls"><button id="show-help">つなぎ直す方法を見る</button><button id="show-support">製作者に相談する</button></div>
+    <details class="help"><summary>結果の説明を読む</summary><p class="hint" id="scope"></p><p class="hint">左右それぞれの接続先までは、この図だけでは分かりません。無線の接続と、実際に文字を入力できることは別に確認します。</p><div id="cards" class="cards"></div></details>
+  </section>
+  <details class="panel"><summary>つながらなかった理由の手がかりを見る</summary><p class="hint" id="security-summary"></p><div id="security-events" class="cards"></div></details>
+  <details class="panel" id="recovery"><summary>3. 設定を消して、最初からつなぎ直す</summary>
+    <p>まず電源とパソコンのBluetoothがオンか確認し、機器を近くに置いて試してください。それでもつながらない場合や、登録を解除するキー操作が分からない場合は、ここからやり直せます。</p>
+    <p>お使いの機器と、困っていることを選んでください。選ぶだけで設定が変わることはありません。</p>
+    <div class="addresses">
+      <label for="central-model">まとめ役に使っている機器<select id="central-model"><option value="">分からない・まだ選んでいない</option><option value="tps43">TPS43（タッチ面）</option><option value="trackball">Madula ＋ ボール</option><option value="trackpoint">Madula ＋ スティック</option><option value="iqs">Madula ＋ タッチ面（IQS）</option></select></label>
+      <label for="recovery-target">どことつながりませんか？<select id="recovery-target"><option value="">分からない・まだ選んでいない</option><option value="host">まとめ役の機器とパソコン</option><option value="split">左右のキーボードとまとめ役の機器</option></select></label>
+    </div>
+    <p id="recovery-warning" class="recovery-warning"></p>
+    <div id="recovery-content"><ol id="recovery-steps"></ol>
+      <div class="table-wrap" id="recovery-firmware-wrap" hidden><table><caption>間違えないよう、ファイル名を1文字ずつ確認してください</caption><thead><tr><th>機器</th><th>先に入れる：設定を消すファイル</th><th>あとで必ず入れる：元に戻すファイル</th></tr></thead><tbody id="recovery-firmware"></tbody></table></div>
+      <details id="recovery-advanced" class="help"><summary>詳しい人と一緒に確認する情報</summary><p id="recovery-technical-warning"></p><ol id="recovery-technical-steps"></ol><p id="recovery-note"></p><p>対応ファイルは firmware/zmk-keyboard-cornix/main/ または同じリビジョンのActions成果物から用意します。</p><a href="https://zmk.dev/docs/troubleshooting/connection-issues" target="_blank" rel="noopener noreferrer">ZMK公式の復旧手順</a></details>
+    </div>
+  </details>
+  <details class="panel" id="support-panel"><summary id="support-title">4. 製作者に送る相談文を作る</summary>
+    <p>機器・診断結果・試したことを、送れる文章にまとめます。自動で送信されることはありません。</p>
+    <label for="symptom">どんなことで困っていますか？（書ける範囲で大丈夫です）</label><textarea id="symptom" maxlength="1000" placeholder="例：右のキーだけ反応しません。昨日までは使えていました。"></textarea>
+    <fieldset><legend>すでに試したこと（当てはまるものだけ）</legend><label class="check"><input type="checkbox" id="tried-power">電源を入れ直した</label><label class="check"><input type="checkbox" id="tried-pairing">パソコンと機器の接続を登録し直した</label><label class="check"><input type="checkbox" id="tried-reset">機器の設定を消し、元のファイルを書き込み直した</label></fieldset>
+    <p class="hint">機器の種類と接続相手は、上の「設定を消して、最初からつなぎ直す」で選んだ内容を使います。分からなければ未選択のままで大丈夫です。</p>
+    <button id="make-summary" class="primary">相談文を作る</button>
+    <div id="support-output" hidden><label for="support-text">送る前に内容を確認してください。ここで書き直せます。</label><textarea id="support-text" spellcheck="false"></textarea><div class="controls"><button id="copy-summary">相談文をコピーする</button><button id="save-summary">相談文をファイルに保存する</button></div><p class="hint">作成した時点の内容です。診断し直したり回答を変えたりした場合は、もう一度「相談文を作る」を押してください。名前など、送りたくない情報がないか確認してください。</p></div>
+    <p id="support-message" role="status" aria-live="polite"></p>
+    <details class="help"><summary>詳しい記録を頼まれた場合</summary><p>下のボタンで元の記録も保存できます。機器を識別する番号が含まれるため、相談する相手にだけ渡してください。</p><button id="save">詳しい記録を保存する</button></details>
+  </details>
+  <details class="panel"><summary>詳しい情報（通常は開かなくて大丈夫です）</summary>
+    <p id="role"></p><details class="help"><summary>左右のアドレスを照合する</summary><p>既知のBLEアドレスを入力します。接続順からは左右を推定できません。</p><div class="addresses"><label>左<input id="left" placeholder="AA:BB:CC:DD:EE:FF" maxlength="17"></label><label>右<input id="right" placeholder="AA:BB:CC:DD:EE:FF" maxlength="17"></label></div><div id="side-facts"></div></details>
+    <h3>無線リンクの内訳</h3><p class="hint">local_roleは接続ごとのBLE roleです。ZMKのCentral／Peripheralとは異なります。security=L2以上でも入力到達は未確認です。</p><div class="table-wrap"><table><thead><tr><th>接続相手</th><th>local_role</th><th>状態</th><th>security</th></tr></thead><tbody id="peers"></tbody></table></div>
+    <h3>直近のエラー・切断記録</h3><pre id="warnings">記録がありません</pre>
+    <p class="hint">Web Serialで115200 baud、DTRを有効化して受信します。送信・1200 baudリセット・bond消去は行いません。</p>
+  </details>
+  <footer>「まだ確認できません」は「故障」という意味ではありません。<br>この画面で読み取ったり、案内を開いたりするだけでは、機器の設定は変わりません。</footer>
+</main>
+<script type="module" src="app.mjs"></script>
+</body></html>
