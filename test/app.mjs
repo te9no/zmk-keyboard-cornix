@@ -6,7 +6,7 @@ let port, reader, reading = false, opening = false, lastSnapshot = '', receivedS
 let sourceKind = 'none', lastReport;
 // A preset chooses UI guidance only; it is not evidence of the connected device.
 const presetModel = new URLSearchParams((globalThis.location?.hash || '').slice(1)).get('model');
-if (['tps43', 'trackball', 'trackpoint', 'iqs'].includes(presetModel)) $('central-model').value = presetModel;
+$('central-model').value = 'tps43';
 function render() {
   if (new TextEncoder().encode($('log').value).length > MAX_LOG_BYTES) {
     lastReport = undefined;
@@ -62,7 +62,7 @@ function renderPicture(report) {
   }
   $('picture-sensor-status').textContent = picture.sensor.text;
   $('picture-sensor-status').dataset.state = picture.sensor.state;
-  $('picture-model').textContent = ({tps43:'TPS43',trackball:'Madula ＋ ボール',trackpoint:'Madula ＋ スティック',iqs:'Madula ＋ タッチ面'})[$('central-model').value] || 'Madula または TPS43';
+  $('picture-model').textContent = ({tps43:'TPS43'})[$('central-model').value] || 'TPS43';
 }
 function renderRecovery() {
   const guide = plainRecovery($('central-model').value, $('recovery-target').value);
@@ -112,11 +112,7 @@ $('demo').onclick = () => {
     message('TPS43の見本です。タッチ面の初期化と左右2台分の無線接続記録の例です。実際の入力・PC接続は未確認です。');
     return;
   }
-  setInput(`[00:00:01.000,000] <err> iqs9151: unexpected product number 0xeeee
-[00:00:10.000,000] <inf> cornix_ble_link: LINK detail peer=AA:BB:CC:DD:EE:01 (public) local_role=peripheral state=2 security=L2
-[00:00:10.000,100] <inf> cornix_ble_link: LINK status role=central connections=1 local_central=0 local_peripheral=1
-[00:00:10.000,200] <inf> cornix_ble_link: LINK host_profile index=0 active=1 open=0 connected=1 peer=AA:BB:CC:DD:EE:01 (public)`, 'お試しの見本・実機の状態ではありません', 'sample');
-  message('お試しの結果です。パソコンとは接続、左右の接続は未確認、操作部分にエラーがある例です。');
+  message('TPS43を選択してから見本を開いてください。');
 };
 $('save').onclick = () => {
   const url = URL.createObjectURL(new Blob([$('log').value], {type:'text/plain;charset=utf-8'}));

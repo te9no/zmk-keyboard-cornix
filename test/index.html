@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; img-src 'none'; base-uri 'none'; form-action 'none'">
-  <meta name="description" content="CornixとMadulaがつながらないときに、状態と次にすることを確認できます。">
-  <title>Cornix / Madula つながるかチェック</title>
+  <meta name="description" content="CornixとTPS43がつながらないときに、状態と次にすることを確認できます。">
+  <title>Cornix / TPS43 つながるかチェック</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <main>
-  <header><div><p class="eyebrow">Cornix / Madula 接続サポート</p><h1>つながらないときは、ここで確認</h1><p>機器の記録を読み取って、次にすることをご案内します。</p></div><span class="privacy">記録は外部に送りません</span></header>
+  <header><div><p class="eyebrow">Cornix / TPS43 接続サポート</p><h1>つながらないときは、ここで確認</h1><p>機器の記録を読み取って、次にすることをご案内します。</p></div><span class="privacy">記録は外部に送りません</span></header>
   <section class="panel" aria-labelledby="input-title">
     <div class="section-head"><h2 id="input-title">1. 機器をつないで調べる</h2><span id="source">まだ読み取っていません</span></div>
-    <ol class="start-steps"><li>左右のキーボードと、<strong>まとめ役の機器（MadulaまたはTPS43）</strong>の電源を入れます。</li><li>まとめ役の機器を、データ通信できるUSBケーブルでパソコンにつなぎます。</li><li>下のボタンを押し、表示された一覧から機器を選びます。<strong>15秒ほど待つ</strong>と結果が出ます。</li></ol>
+    <ol class="start-steps"><li>左右のキーボードと、<strong>まとめ役の機器（TPS43）</strong>の電源を入れます。</li><li>まとめ役の機器を、データ通信できるUSBケーブルでパソコンにつなぎます。</li><li>下のボタンを押し、表示された一覧から機器を選びます。<strong>15秒ほど待つ</strong>と結果が出ます。</li></ol>
     <div class="controls"><button id="serial" class="primary">USBで調べる</button><button id="stop" disabled>読み取りを止める</button></div>
     <p>読み取るだけなので、機器の設定は消えません。</p>
     <details class="help"><summary>うまく読み取れないとき</summary><p>ChromeまたはEdgeでこのページを開いてください。機器が一覧に出ないときは、USBケーブルと電源を確認してください。</p><p>一覧に複数の候補がある場合、必要なのは記録を読むための接続先です。キーの設定に使う「Studio」の接続先とは別です。どれか分からなければ、ほかの機器を試さず、製作者やサポートに確認してください。</p><p>記録を読む別のアプリを開いている場合は、その読み取りを止めてから試してください。文字が出ないだけでは、故障とは判断できません。</p></details>
@@ -29,7 +29,7 @@
     <div class="connection-picture" role="group" aria-label="パソコン、まとめ役の機器、左右のキーボードの接続状況">
       <div class="picture-node" id="picture-host"><svg class="device-icon" viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="9" width="48" height="33" rx="4"/><path d="M32 42v12M22 54h20"/></svg><h3>パソコン</h3><span class="connection-caption">Bluetoothでつなぐ相手</span><p id="picture-host-status" class="picture-status"></p></div>
       <div class="picture-link" id="picture-host-link" aria-hidden="true"><span></span></div>
-      <div class="picture-node module-node"><svg class="device-icon" viewBox="0 0 64 64" aria-hidden="true"><rect x="17" y="10" width="30" height="44" rx="8"/><circle cx="32" cy="28" r="8"/><path d="M26 45h12M4 25h7M53 25h7"/></svg><h3>まとめ役</h3><span id="picture-model" class="connection-caption">Madula または TPS43</span><p id="picture-sensor-status" class="picture-status"></p></div>
+      <div class="picture-node module-node"><svg class="device-icon" viewBox="0 0 64 64" aria-hidden="true"><rect x="17" y="10" width="30" height="44" rx="8"/><circle cx="32" cy="28" r="8"/><path d="M26 45h12M4 25h7M53 25h7"/></svg><h3>まとめ役</h3><span id="picture-model" class="connection-caption">TPS43</span><p id="picture-sensor-status" class="picture-status"></p></div>
       <div class="picture-link" id="picture-keyboards-link" aria-hidden="true"><span></span></div>
       <div class="picture-node" id="picture-keyboards"><div class="keyboard-pair"><div><svg class="device-icon" viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="14" width="52" height="36" rx="5"/><path d="M16 24h4m8 0h4m8 0h4M16 32h4m8 0h4m8 0h4M16 41h20"/></svg><span>左</span></div><div><svg class="device-icon" viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="14" width="52" height="36" rx="5"/><path d="M16 24h4m8 0h4m8 0h4M16 32h4m8 0h4m8 0h4M28 41h20"/></svg><span>右</span></div></div><h3>キーボード</h3><span class="connection-caption">左右をまとめて確認</span><p id="picture-keyboards-status" class="picture-status"></p></div>
     </div>
@@ -43,7 +43,7 @@
     <p>まず電源とパソコンのBluetoothがオンか確認し、機器を近くに置いて試してください。それでもつながらない場合や、登録を解除するキー操作が分からない場合は、ここからやり直せます。</p>
     <p>お使いの機器と、困っていることを選んでください。選ぶだけで設定が変わることはありません。</p>
     <div class="addresses">
-      <label for="central-model">まとめ役に使っている機器<select id="central-model"><option value="">分からない・まだ選んでいない</option><option value="tps43">TPS43（タッチ面）</option><option value="trackball">Madula ＋ ボール</option><option value="trackpoint">Madula ＋ スティック</option><option value="iqs">Madula ＋ タッチ面（IQS）</option></select></label>
+      <label for="central-model">まとめ役に使っている機器<select id="central-model"><option value="">分からない・まだ選んでいない</option><option value="tps43" selected>TPS43（タッチ面）</option></select></label>
       <label for="recovery-target">どことつながりませんか？<select id="recovery-target"><option value="">分からない・まだ選んでいない</option><option value="host">まとめ役の機器とパソコン</option><option value="split">左右のキーボードとまとめ役の機器</option></select></label>
     </div>
     <p id="recovery-warning" class="recovery-warning"></p>

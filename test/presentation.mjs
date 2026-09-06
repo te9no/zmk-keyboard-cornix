@@ -79,7 +79,7 @@ export function plainRecovery(central, target) {
 }
 
 export function supportSummary(report, {central = '', target = '', symptom = '', tried = [], source = 'none'} = {}) {
-  const models = {tps43:'TPS43（タッチ面）', trackball:'Madula ＋ ボール', trackpoint:'Madula ＋ スティック', iqs:'Madula ＋ タッチ面（IQS）'};
+  const models = {tps43:'TPS43（タッチ面）'};
   const targets = {host:'まとめ役の機器とパソコン', split:'左右のキーボードとまとめ役の機器'};
   const sources = {none:'記録はまだ読み取っていません', saved:'保存した記録・貼り付けた記録（過去の状態）', usb:'USBから読み取った記録（読み取った範囲のみ）', sample:'お試しの見本です。実機の診断ではありません'};
   const actions = {power:'電源を入れ直した', pairing:'パソコンと機器の接続を登録し直した', reset:'機器の設定を消し、元のファイルを書き込み直した'};

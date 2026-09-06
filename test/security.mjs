@@ -73,7 +73,7 @@ export function createSecurityObserver() {
 
 // User-selected scope, never inferred from a generic connection count or timeout.
 export function recoveryGuide(central, target) {
-  const models = {tps43:'cornix_tps43_production', trackball:'madula_trackball', trackpoint:'madula_trackpoint', iqs:'madula_iqs'};
+  const models = {tps43:'cornix_tps43_production'};
   if (!models[central] || !['host', 'split'].includes(target)) return {
     warning:'まず実機のCentralと、接続に失敗している相手を選んでください。選択はログによる確定診断ではありません。', steps:[], firmware:[],
   };
@@ -83,15 +83,13 @@ export function recoveryGuide(central, target) {
       '対象PC用のBluetoothプロファイルを確認します。空きプロファイルへ切り替えるだけで解決する場合もあります。',
       '再登録する場合、PCのBluetooth設定から対象キーボードの登録を削除し、Central側はそのPCのプロファイルだけをBT_CLR（設定済みキーや対応Studio操作）で消去します。別のPCの登録を消さないでください。',
       'PCからペアリングし直します。USB給電中にBLE入力を試す場合は出力先をBLEへ切り替え、ログと実キー入力の両方を確認します。',
-      central === 'tps43'
-        ? 'BT_CLRを操作できない場合の選択肢: cornix_tps43_host_bond_reset.uf2をTPS43へ書き込み、起動後の「Central host profiles cleared」ログを確認します。全PC/スマートフォンのbondが消えますが、左右のbondは維持します。必ずcornix_tps43_production.uf2へ戻してから再ペアリングしてください。復旧ファームのままでは起動のたびに消去されます。'
-        : 'Madula専用のhost_bond_resetターゲットは現在ありません。TPS43のhost_bond_reset／productionをMadulaへ流用しないでください。BT_CLRが使えない場合は、全設定消去の影響を理解したうえで「Centralと左右Peripheral」の復旧手順を検討します。',
+      'BT_CLRを操作できない場合の選択肢: cornix_tps43_host_bond_reset.uf2をTPS43へ書き込み、起動後の「Central host profiles cleared」ログを確認します。全PC/スマートフォンのbondが消えますが、左右のbondは維持します。必ずcornix_tps43_production.uf2へ戻してから再ペアリングしてください。復旧ファームのままでは起動のたびに消去されます。',
     ], firmware:[],
   };
   return {
     warning:'全設定消去: Centralと左右3台のbond、PCプロファイル、保存済みのキーマップ等の設定が失われます。必要な設定を先に控え、通常ファームも3台分用意してください。認証要件の不一致や電波問題にはResetが効かない場合があります。',
     steps:[
-      '対象がXIAO BLEのTPS43/Madula CentralとCornix左右であること、ファームの役割と左右を確認します。別のCentralは電源を切ります。異なる基板・Flash配置ではこの一覧を使わないでください。',
+      '対象がXIAO BLEのTPS43 CentralとCornix左右であること、ファームの役割と左右を確認します。別のCentralは電源を切ります。異なる基板・Flash配置ではこの一覧を使わないでください。',
       '3台をブートローダーモードにし、各デバイスへ対応するsettings_reset.uf2を書き込みます。各Resetファームを一度起動して設定消去が完了するのを待ち、全3台の消去が終わるまで通常ファームへ戻さないでください。',
       '全3台の消去後、各デバイスを再びブートローダーモードにし、下表の通常ファームへ戻します。Settings ResetのままではBluetooth接続・入力はできません。',
       'Centralと左右をほぼ同時に再起動して自動ペアリングを待ちます。PCのBluetooth設定に残った旧登録を削除し、CentralをPCへ再ペアリングします。',
@@ -102,6 +100,6 @@ export function recoveryGuide(central, target) {
       ['Cornix左（cornix_ph_left）', 'cornix_left_settings_reset.uf2', 'cornix_left_production.uf2'],
       ['Cornix右', 'cornix_right_settings_reset.uf2', 'cornix_right_production.uf2'],
     ],
-    note:'Central用Resetは名前にtps43がありますが、build.yamlではxiao_ble//zmk + settings_reset + NVS設定の共通イメージです（センサードライバーなし）。現在の同一ボード・保存領域を使うMadulaにも対応する構成です。実機での復旧動作は未検証です。左右のbond_resetは毎回起動時に設定全体を消すため、この全体復旧には使用しません。',
+    note:'Central用Resetは名前にtps43がありますが、build.yamlではxiao_ble//zmk + settings_reset + NVS設定の共通イメージです（センサードライバーなし）。実機での復旧動作は未検証です。左右のbond_resetは毎回起動時に設定全体を消すため、この全体復旧には使用しません。',
   };
 }
