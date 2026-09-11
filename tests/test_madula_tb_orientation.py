@@ -17,20 +17,29 @@ def transform(mask, x, y):
 
 class MadulaTrackballOrientationTests(unittest.TestCase):
     def test_both_listeners_correct_the_reported_mounting(self):
-        # Raw vectors inferred by undoing the previous X-only inversion.
-        cases = {"up": ((1, 0), (0, -1)), "right": ((0, -1), (1, 0)),
-                 "down": ((-1, 0), (0, 1)), "left": ((0, 1), (-1, 0)),
-                 "diagonal": ((1, -1), (1, -1)), "idle": ((0, 0), (0, 0))}
+        # Candidate model: previous mask 7 produces up->left, down->right.
+        # Horizontal vectors assume a rotation, as requested; not measured.
+        cases = {"up": ((0, 1), (0, -1)), "right": ((1, 0), (1, 0)),
+                 "down": ((0, -1), (0, 1)), "left": ((-1, 0), (-1, 0)),
+                 "diagonal": ((1, 1), (1, -1)), "idle": ((0, 0), (0, 0))}
+        self.assertEqual(transform(7, 0, 1), (-1, 0))
+        self.assertEqual(transform(7, 0, -1), (1, 0))
         for snippet in ("madula-trackball", "madula-dya-trackball"):
             text = (ROOT / f"snippets/{snippet}/{snippet}.overlay").read_text()
             expression = re.search(r"<&zip_xy_transform\s+([^>]+)>", text).group(1)
             mask = 0
             for flag in re.findall(r"INPUT_TRANSFORM_[A-Z_]+", expression):
                 mask |= FLAGS[flag]
-            self.assertEqual(mask, 7)
+            self.assertEqual(mask, 4)
             for direction, (raw, expected) in cases.items():
                 with self.subTest(snippet=snippet, direction=direction):
                     self.assertEqual(transform(mask, *raw), expected)
+
+    def test_scroll_layer_retains_same_mounting(self):
+        text = (ROOT / "snippets/madula-trackball/madula-trackball.overlay").read_text()
+        expressions = re.findall(r"<&zip_xy_transform\s+([^>]+)>", text)
+        self.assertEqual(len(expressions), 2)
+        self.assertTrue(all(e.strip() == "INPUT_TRANSFORM_Y_INVERT" for e in expressions))
 
     def test_studio_tuning_remains_after_mounting_transform(self):
         text = (ROOT / "snippets/madula-dya-trackball/madula-dya-trackball.overlay").read_text()
